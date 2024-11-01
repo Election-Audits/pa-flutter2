@@ -14,7 +14,7 @@ class DefaultApp {
   //运行app
   static void run() {
     WidgetsFlutterBinding.ensureInitialized();
-    initFirst().then((value) => runApp(Store.init(ToastUtils.init(MyApp()))));
+    initFirst().then((value) => runApp(Store.init(MyApp()))); // ToastUtils.init(
     initApp();
   }
 

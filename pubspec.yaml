@@ -17,7 +17,7 @@ dependencies:
   cookie_jar: 3.0.1
   cupertino_icons: 1.0.2
   date_format: 2.0.2
-  devicelocale: 0.4.2
+  devicelocale: 0.8.1
   dio: ^5.3.2
   dio_cookie_manager: ^2.1.4
   extended_image: 8.1.2
@@ -28,13 +28,14 @@ dependencies:
   #flutter_xupdate: 3.0.0
   #oktoast: 3.4.0
   path_provider: 2.1.5
-  package_info: 2.0.0
-  permission_handler: 7.1.0
+  #package_info: 2.0.2
+  package_info_plus: ^8.1.0
+  permission_handler: 11.3.1
   provider: 5.0.0
   shared_preferences: 2.3.2
-  share: 2.0.1
+  #share: 2.0.1
   url_launcher: ^6.0.2
-  image_gallery_saver: 2.0.3
+  #image_gallery_saver: 2.0.3
   flutter_riverpod: ^2.3.7
 
 # dependencies_override:

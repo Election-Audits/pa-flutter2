@@ -1,8 +1,8 @@
 import 'dart:core';
-import 'package:flutter/foundation.dart';
+//import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 //import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import 'package:share/share.dart';
+//import 'package:share/share.dart';
 
 class WebViewPage extends StatefulWidget {
   WebViewPage();

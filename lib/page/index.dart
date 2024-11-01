@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_template/core/utils/click.dart';
 import 'package:flutter_template/core/utils/privacy.dart';
 import 'package:flutter_template/core/utils/toast.dart';
-import 'package:flutter_template/core/utils/xupdate.dart';
+//import 'package:flutter_template/core/utils/xupdate.dart';
 import 'package:flutter_template/generated/i18n.dart';
 import 'package:flutter_template/page/home/tab_home.dart';
 import 'package:flutter_template/utils/provider.dart';
@@ -47,7 +47,7 @@ class _MainHomePageState extends ConsumerState<MainHomePage> {
   @override
   void initState() {
     super.initState();
-    XUpdate.initAndCheck();
+    //XUpdate.initAndCheck();
   }
 
   @override

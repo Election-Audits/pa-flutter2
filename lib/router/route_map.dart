@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_template/core/widget/web_view_page.dart';
+//import 'package:flutter_template/core/widget/web_view_page.dart';
 import 'package:flutter_template/init/splash.dart';
 import 'package:flutter_template/page/index.dart';
 import 'package:flutter_template/page/menu/about.dart';
@@ -13,7 +13,7 @@ class RouteMap {
     '/': (context) => SplashPage(),
     '/login': (context) => LoginPage(),
     '/home': (context) => MainHomePage(),
-    '/web': (context) => WebViewPage(),
+    //'/web': (context) => WebViewPage(),
     '/menu/sponsor-page': (context) => SponsorPage(),
     '/menu/settings-page': (context) => SettingsPage(),
     '/menu/about-page': (context) => AboutPage(),

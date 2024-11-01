@@ -1,4 +1,4 @@
-import 'dart:io';
+/*import 'dart:io';
 
 import 'package:flutter_template/core/utils/toast.dart';
 import 'package:flutter_xupdate/flutter_xupdate.dart';
@@ -67,3 +67,4 @@ class XUpdate {
     checkUpdate(url);
   }
 }
+*/

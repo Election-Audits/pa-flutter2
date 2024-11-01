@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_template/core/utils/utils.dart';
-import 'package:flutter_template/core/utils/xupdate.dart';
+//import 'package:flutter_template/core/utils/xupdate.dart';
 import 'package:flutter_template/core/widget/list/list_item.dart';
 import 'package:flutter_template/generated/i18n.dart';
 
@@ -101,7 +101,7 @@ class _AboutPageState extends State<AboutPage> {
                             titleColor: Colors.white,
                             describeColor: Colors.white,
                             onPressed: () {
-                              XUpdate.checkUpdateWithErrorTip();
+                              //XUpdate.checkUpdateWithErrorTip();
                             },
                           )
                         ],

@@ -28,51 +28,77 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   void initState() {
     super.initState();
-    if (!SPUtils.isAgreePrivacy()!) {
-      PrivacyUtils.showPrivacyDialog(context, onAgressCallback: () {
-        Navigator.of(context).pop();
-        SPUtils.saveIsAgreePrivacy(true);
-        ToastUtils.success(I18n.of(context)!.agreePrivacy);
-      });
-    }
+    // if (!SPUtils.isAgreePrivacy()!) {
+    //   PrivacyUtils.showPrivacyDialog(context, onAgressCallback: () {
+    //     Navigator.of(context).pop();
+    //     SPUtils.saveIsAgreePrivacy(true);
+    //     ToastUtils.success(I18n.of(context)!.agreePrivacy);
+    //   });
+    // }
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
+    return PopScope(
+        canPop: false,
         child: Scaffold(
           appBar: AppBar(
             // leading: _leading(context),
             title: Text(I18n.of(context)!.login),
             actions: <Widget>[
-              TextButton(
-                child: Text(I18n.of(context)!.register,
-                    style: TextStyle(color: Colors.white)),
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) {
-                      return RegisterPage();
-                    },
-                  ));
-                },
-              )
+              // TextButton(
+              //   child: Text(I18n.of(context)!.register,
+              //       style: TextStyle(color: Colors.black)), // white
+              //   onPressed: () {
+              //     Navigator.of(context).push(MaterialPageRoute(
+              //       builder: (context) {
+              //         return RegisterPage();
+              //       },
+              //     ));
+              //   },
+              // )
             ],
           ),
-          body: GestureDetector(
-            onTap: () {
-              // 点击空白页面关闭键盘
-              closeKeyboard(context);
-            },
-            child: SingleChildScrollView(
-              padding:
-                  const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
-              child: buildForm(context),
-            ),
-          ),
+          body: Column(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  // 点击空白页面关闭键盘
+                  closeKeyboard(context);
+                },
+                child: SingleChildScrollView(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+                  child: buildForm(context),
+                ),
+              ),
+              const SizedBox(height: 32),
+              // // TODO: forgot password
+              // // Register
+              // Row(
+              //   children: [
+              //     TextButton(
+              //       child: Text(I18n.of(context)!.register,
+              //           style: TextStyle(color: Colors.blueAccent)),
+              //       onPressed: () {
+              //         Navigator.of(context).push(MaterialPageRoute(
+              //           builder: (context) {
+              //             return RegisterPage();
+              //           },
+              //         ));
+              //       },
+              //     )
+              //   ],
+              // ),
+              
+          ],)
+          
+            
         ),
-        onWillPop: () async {
-          return Future.value(false);
-        });
+        onPopInvokedWithResult: (didPop, result) async {
+
+        }
+      );
   }
 
   //构建表单
@@ -145,7 +171,27 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 })),
               ],
             ),
-          )
+          ),
+
+          //
+          // TODO: forgot password
+          // Register
+          Row(
+            children: [
+              Text(I18n.of(context)!.noAccountQuestion),
+              TextButton(
+                child: Text(I18n.of(context)!.register,
+                    style: TextStyle(color: Colors.blueAccent)),
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) {
+                      return RegisterPage();
+                    },
+                  ));
+                },
+              )
+            ],
+          ),
         ],
       ),
     );

@@ -164,11 +164,12 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Text(I18n.of(context)!.login,
                     style: TextStyle(color: Colors.blueAccent)),
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute( // TODO: pop other routes
+                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
                     builder: (context) {
                       return LoginPage();
-                    },
-                  ));
+                    }),
+                    (_)=> false
+                  );
                 },
               )
             ],

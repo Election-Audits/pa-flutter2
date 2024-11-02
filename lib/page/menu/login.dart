@@ -82,10 +82,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       child: Column(
         children: <Widget>[
           Center(
-              heightFactor: 1.5,
-              child: FlutterLogo(
-                size: 64,
-              )),
+            heightFactor: 1.5,
+            child: FlutterLogo(
+              size: 64,
+          )),
+          Text(
+            I18n.of(context)!.enterEmailPhone,
+            textAlign: TextAlign.center,
+          ),
           TextFormField(
             autofocus: false,
             controller: _emailController,
@@ -172,11 +176,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 child: Text(I18n.of(context)!.register,
                     style: TextStyle(color: Colors.blueAccent)),
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
+                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
                     builder: (context) {
                       return RegisterPage();
-                    },
-                  ));
+                    }),
+                    (_)=> false
+                  );
                 },
               )
             ],

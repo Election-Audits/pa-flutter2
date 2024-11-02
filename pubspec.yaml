@@ -38,12 +38,11 @@ dependencies:
   #image_gallery_saver: 2.0.3
   flutter_riverpod: ^2.6.1
 
-# dependencies_override:
-#   win32: 5.7.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  i18n_json: ^1.0.0
 
 # 字体、图标、图片等资源加载
 flutter:

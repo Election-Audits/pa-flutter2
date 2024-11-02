@@ -21,7 +21,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   // 响应空白处的焦点的Node
   bool _isShowPassWord = false;
   FocusNode blankNode = FocusNode();
-  TextEditingController _unameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _phoneController = TextEditingController();
   TextEditingController _pwdController = TextEditingController();
   GlobalKey _formKey = GlobalKey<FormState>();
 
@@ -39,25 +40,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-        canPop: false,
-        child: Scaffold(
+    return 
+      // PopScope(
+      //   canPop: false,
+      //   child: 
+        Scaffold(
           appBar: AppBar(
             // leading: _leading(context),
-            title: Text(I18n.of(context)!.login),
-            actions: <Widget>[
-              // TextButton(
-              //   child: Text(I18n.of(context)!.register,
-              //       style: TextStyle(color: Colors.black)), // white
-              //   onPressed: () {
-              //     Navigator.of(context).push(MaterialPageRoute(
-              //       builder: (context) {
-              //         return RegisterPage();
-              //       },
-              //     ));
-              //   },
-              // )
-            ],
+            //title: Text(I18n.of(context)!.login),
+            //actions: <Widget>[],
           ),
           body: Column(
             children: [
@@ -72,33 +63,15 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   child: buildForm(context),
                 ),
               ),
-              const SizedBox(height: 32),
-              // // TODO: forgot password
-              // // Register
-              // Row(
-              //   children: [
-              //     TextButton(
-              //       child: Text(I18n.of(context)!.register,
-              //           style: TextStyle(color: Colors.blueAccent)),
-              //       onPressed: () {
-              //         Navigator.of(context).push(MaterialPageRoute(
-              //           builder: (context) {
-              //             return RegisterPage();
-              //           },
-              //         ));
-              //       },
-              //     )
-              //   ],
-              // ),
+              // const SizedBox(height: 32)
               
           ],)
           
             
-        ),
-        onPopInvokedWithResult: (didPop, result) async {
-
-        }
-      );
+        );
+      //   onPopInvokedWithResult: (didPop, result) async {
+      //   }
+      // );
   }
 
   //构建表单
@@ -114,19 +87,34 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 size: 64,
               )),
           TextFormField(
-              autofocus: false,
-              controller: _unameController,
-              decoration: InputDecoration(
-                  labelText: I18n.of(context)!.loginName,
-                  hintText: I18n.of(context)!.loginNameHint,
-                  hintStyle: TextStyle(fontSize: 12),
-                  icon: Icon(Icons.person)),
-              //校验用户名
-              validator: (v) {
-                return v!.trim().length > 0
-                    ? null
-                    : I18n.of(context)!.loginNameError;
-              }),
+            autofocus: false,
+            controller: _emailController,
+            decoration: InputDecoration(
+                labelText: I18n.of(context)!.email,
+                hintText: I18n.of(context)!.emailHint,
+                hintStyle: TextStyle(fontSize: 12),
+                icon: Icon(Icons.email)),
+            //校验用户名
+            validator: (v) {
+              return v!.trim().length > 0
+                  ? null
+                  : I18n.of(context)!.emailError;
+          }),
+          // phone
+          TextFormField(
+            autofocus: false,
+            controller: _phoneController,
+            decoration: InputDecoration(
+                labelText: I18n.of(context)!.phone,
+                hintText: I18n.of(context)!.phoneHint,
+                hintStyle: TextStyle(fontSize: 12),
+                icon: Icon(Icons.phone)),
+            //校验用户名
+            validator: (v) {
+              return v!.trim().length > 0
+                  ? null
+                  : I18n.of(context)!.phoneError;
+          }),
           TextFormField(
               controller: _pwdController,
               decoration: InputDecoration(
@@ -177,6 +165,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           // TODO: forgot password
           // Register
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(I18n.of(context)!.noAccountQuestion),
               TextButton(
@@ -224,7 +213,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         });    
 
     XHttp.post("/user/login", {
-      "username": _unameController.text,
+      "username": _emailController.text,
       "password": _pwdController.text
     }).then((response) {
       Navigator.pop(context);

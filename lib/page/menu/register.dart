@@ -208,40 +208,44 @@ class _RegisterPageState extends State<RegisterPage> {
     // NB: password equality checked in input validator
 
     showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return LoadingDialog(
-            showContent: false,
-            backgroundColor: Colors.black38,
-            loadingView: SpinKitCircle(color: Colors.white),
-          );
-        });
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return LoadingDialog(
+          showContent: false,
+          backgroundColor: Colors.black38,
+          loadingView: SpinKitCircle(color: Colors.white),
+        );
+      }
+    );
 
     var dataSend = {"password": _pwdController.text};
+    var email = _emailController.text.trim();
+    var phone = _phoneController.text.trim(); // TODO: setting country code in form
     // using either email or phone, check before sending
     if (_emailController.text.isNotEmpty) {
-      dataSend['email'] = _emailController.text.trim();
+      dataSend['email'] = email;
     }
     if (_phoneController.text.isNotEmpty) {
-      dataSend['phone'] = _phoneController.text.trim(); // TODO: setting country code in form
+      dataSend['phone'] = phone;
     }
 
 
     XHttp.postJson("/signup", dataSend)
     .then((response) {
+      Navigator.of(context).pop(); // pop loading dialog/spinner
       debugPrint('/signup response: $response');
       var status = response.statusCode;
       debugPrint('status code: $status');
       if (status == 200) { // transition to OTP screen
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) {
-            return OtpPage(isLogin: false);
+            return OtpPage(isLogin: false, email: email, phone: phone);
           })
         );
       } else if (status == 400) { // display error message that was sent
-        debugPrint('/signup error: ${response.data?.errMsg}');
-        ToastUtils.error(response.data?.errMsg);
+        debugPrint('/signup error: ${response?.data?.errMsg}');
+        ToastUtils.error(response?.data?.errMsg);
       } else { // something went wrong
         debugPrint('/signup error 500');
         ToastUtils.error(I18n.of(context)!.somethingWentWrong);
@@ -257,7 +261,7 @@ class _RegisterPageState extends State<RegisterPage> {
       // }
     }).catchError((onError) {
       debugPrint('caught /signup error: $onError');
-      //Navigator.of(context).pop();
+      //Navigator.of(context).pop(); // pop loading dialog
       ToastUtils.error(onError);
     });
   }

@@ -15,7 +15,7 @@ class XHttp {
   static final Dio dio = Dio(BaseOptions(
     baseUrl: "https://test.api-agent.electaudits.org",
     connectTimeout: Duration(milliseconds: 5000),
-    receiveTimeout: Duration(milliseconds: 3000),
+    receiveTimeout: Duration(milliseconds: 20000),
   ));
 
   ///初始化dio
@@ -82,24 +82,42 @@ class XHttp {
   static Future get(String url, [Map<String, dynamic>? params]) async {
     Response response;
     if (params != null) {
-      response = await dio.get(url, queryParameters: params);
+      response = await dio.get(url, queryParameters: params, options: Options(validateStatus: (_)=>true));
     } else {
-      response = await dio.get(url);
+      response = await dio.get(url, options: Options(validateStatus: (_)=>true));
     }
     return response.data;
   }
 
   ///post 表单请求
-  static Future post(String url, [Map<String, dynamic>? params]) async {
-    Response response = await dio.post(url, queryParameters: params);
-    debugPrint(response.data.toString());
-    return response; //.data;
-  }
+  // static Future post(String url, [Map<String, dynamic>? params]) async {
+  //   Response response = await dio.post(url, queryParameters: params);
+  //   debugPrint(response.data.toString());
+  //   return response; //.data;
+  // }
 
   ///post body请求
   static Future postJson(String url, [Map<String, dynamic>? data]) async {
-    Response response = await dio.post(url, data: data);
+    // set validateStatus option so doesn't throw on status 400 or 500
+    Response response = await dio.post(url, data: data, options: Options(validateStatus: (_)=>true));
     return response; //.data;
+    // Response? response;
+    // try {
+    //   response = await dio.post(url, data: data);
+    // } catch (exc) {
+    //   return exc;
+    // }
+    // finally {
+    //   return response;
+    // }
+  }
+
+
+  /// put body JSON
+  static Future putJson(String url, [Map<String, dynamic>? data]) async {
+    // set validateStatus option so doesn't throw on status 400 or 500
+    Response response = await dio.put(url, data: data, options: Options(validateStatus: (_)=>true));
+    return response;
   }
 
   ///下载文件

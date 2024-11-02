@@ -138,12 +138,22 @@ class I18n implements WidgetsLocalizations {
 	String get haveAccountQuestion => "Already have an account? ";
 	/// "Don't have an account? "
 	String get noAccountQuestion => "Don't have an account? ";
+	/// "One Time Passcode"
+	String get otp => "One Time Passcode";
+	/// "must enter one time passcode"
+	String get otpError => "must enter one time passcode";
+	/// "passwords must be equal"
+	String get passwordsNotEqual => "passwords must be equal";
 	/// "phone"
 	String get phone => "phone";
 	/// "must enter phone number"
 	String get phoneError => "must enter phone number";
 	/// "0240001234"
 	String get phoneHint => "0240001234";
+	/// "Sorry, something went wrong. Try again later"
+	String get somethingWentWrong => "Sorry, something went wrong. Try again later";
+	/// "submit"
+	String get submit => "submit";
   
   @override
   String get reorderItemUp => 'Move up';

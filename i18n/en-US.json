@@ -54,7 +54,12 @@
     "enterEmailPhone": "Enter email or phone number",
     "haveAccountQuestion": "Already have an account? ",
     "noAccountQuestion": "Don't have an account? ",
+    "otp": "One Time Passcode",
+    "otpError": "must enter one time passcode",
+    "passwordsNotEqual": "passwords must be equal",
     "phone": "phone",
     "phoneError": "must enter phone number",
-    "phoneHint": "0240001234"
+    "phoneHint": "0240001234",
+    "somethingWentWrong": "Sorry, something went wrong. Try again later",
+    "submit": "submit"
 }

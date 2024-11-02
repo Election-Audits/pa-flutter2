@@ -13,7 +13,7 @@ class XHttp {
 
   ///网络请求配置
   static final Dio dio = Dio(BaseOptions(
-    baseUrl: "https://www.wanandroid.com",
+    baseUrl: "https://test.api-agent.electaudits.org",
     connectTimeout: Duration(milliseconds: 5000),
     receiveTimeout: Duration(milliseconds: 3000),
   ));
@@ -30,10 +30,10 @@ class XHttp {
     (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
       var client = HttpClient();
 
-      client.findProxy = (uri) {
-        // 设置代理服务器地址和端口号
-        return "PROXY 192.168.2.8:8888";
-      };
+      // client.findProxy = (uri) {
+      //   // 设置代理服务器地址和端口号
+      //   return "PROXY 192.168.2.8:8888";
+      // };
       client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
       return client;
     };
@@ -58,22 +58,22 @@ class XHttp {
   static void handleError(DioException e) {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
-        print("连接超时");
+        print("connection timeout");
         break;
       case DioExceptionType.sendTimeout:
-        print("请求超时");
+        print("send timeout");
         break;
       case DioExceptionType.receiveTimeout:
-        print("响应超时");
+        print("receive timeout");
         break;
       case DioExceptionType.badResponse:
-        print("出现异常");
+        print("bad response");
         break;
       case DioExceptionType.cancel:
-        print("请求取消");
+        print("cancel");
         break;
       default:
-        print("未知错误");
+        print("unknown http error");
         break;
     }
   }
@@ -93,13 +93,13 @@ class XHttp {
   static Future post(String url, [Map<String, dynamic>? params]) async {
     Response response = await dio.post(url, queryParameters: params);
     debugPrint(response.data.toString());
-    return response.data;
+    return response; //.data;
   }
 
   ///post body请求
   static Future postJson(String url, [Map<String, dynamic>? data]) async {
     Response response = await dio.post(url, data: data);
-    return response.data;
+    return response; //.data;
   }
 
   ///下载文件
@@ -114,6 +114,6 @@ class XHttp {
     } on DioException catch (e) {
       handleError(e);
     }
-    return response.data;
+    return response; //.data;
   }
 }

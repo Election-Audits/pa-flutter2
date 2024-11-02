@@ -69,8 +69,8 @@ class MyApp extends ConsumerWidget {
           //如果已经选定语言，则不跟随系统
           return ref.read(localProvider.notifier).getLocale();
         } else {
-          //跟随系统
-          Locale? systemLocale = LocaleUtils.getSystemLocale();
+          //跟随系统. TODO: maybe get locale from settings/ shared prefs if available
+          Locale systemLocale = LocaleUtils.getSystemLocale() ?? new Locale('en-us');
           if (I18n.delegate.isSupported(systemLocale)) {
             return systemLocale;
           }

@@ -4,6 +4,7 @@ import 'package:flutter_template/core/http/http.dart';
 import 'package:flutter_template/core/utils/toast.dart';
 import 'package:flutter_template/core/widget/loading_dialog.dart';
 import 'package:flutter_template/generated/i18n.dart';
+import 'package:flutter_template/page/menu/login.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -15,7 +16,8 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _isShowPassWord = false;
   bool _isShowPassWordRepeat = false;
   FocusNode blankNode = FocusNode();
-  TextEditingController _unameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _phoneController = TextEditingController();
   TextEditingController _pwdController = TextEditingController();
   TextEditingController _pwdRepeatController = TextEditingController();
   GlobalKey _formKey = GlobalKey<FormState>();
@@ -23,7 +25,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(I18n.of(context)!.register)),
+      appBar: AppBar(), // title: Text(I18n.of(context)!.register)
       body: GestureDetector(
         onTap: () {
           // 点击空白页面关闭键盘
@@ -43,21 +45,46 @@ class _RegisterPageState extends State<RegisterPage> {
       key: _formKey, //设置globalKey，用于后面获取FormState
       autovalidateMode: AutovalidateMode.disabled,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          Center(
+            heightFactor: 1.5,
+            child: FlutterLogo(
+              size: 64,
+          )),
+          Text(
+            I18n.of(context)!.enterEmailPhone,
+            textAlign: TextAlign.center,
+          ),
           TextFormField(
-              autofocus: false,
-              controller: _unameController,
-              decoration: InputDecoration(
-                  labelText: I18n.of(context)!.loginName,
-                  hintText: I18n.of(context)!.loginNameHint,
-                  hintStyle: TextStyle(fontSize: 12),
-                  icon: Icon(Icons.person)),
-              //校验用户名
-              validator: (v) {
-                return v!.trim().length > 0
-                    ? null
-                    : I18n.of(context)!.loginNameError;
-              }),
+            autofocus: false,
+            controller: _emailController,
+            decoration: InputDecoration(
+                labelText: I18n.of(context)!.email,
+                hintText: I18n.of(context)!.emailHint,
+                hintStyle: TextStyle(fontSize: 12),
+                icon: Icon(Icons.email)),
+            //校验用户名
+            validator: (v) {
+              return v!.trim().length > 0
+                  ? null
+                  : I18n.of(context)!.emailError;
+          }),
+          // phone
+          TextFormField(
+            autofocus: false,
+            controller: _phoneController,
+            decoration: InputDecoration(
+                labelText: I18n.of(context)!.phone,
+                hintText: I18n.of(context)!.phoneHint,
+                hintStyle: TextStyle(fontSize: 12),
+                icon: Icon(Icons.phone)),
+            //校验用户名
+            validator: (v) {
+              return v!.trim().length > 0
+                  ? null
+                  : I18n.of(context)!.phoneError;
+          }),
           TextFormField(
               controller: _pwdController,
               decoration: InputDecoration(
@@ -127,7 +154,26 @@ class _RegisterPageState extends State<RegisterPage> {
                 })),
               ],
             ),
-          )
+          ),
+          // Login if have account
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(I18n.of(context)!.haveAccountQuestion),
+              TextButton(
+                child: Text(I18n.of(context)!.login,
+                    style: TextStyle(color: Colors.blueAccent)),
+                onPressed: () {
+                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                    builder: (context) {
+                      return LoginPage();
+                    }),
+                    (_)=> false
+                  );
+                },
+              )
+            ],
+          ),
         ],
       ),
     );
@@ -167,7 +213,7 @@ class _RegisterPageState extends State<RegisterPage> {
         });
 
     XHttp.post("/user/register", {
-      "username": _unameController.text,
+      "username": _emailController.text,
       "password": _pwdController.text,
       "repassword": _pwdRepeatController.text
     }).then((response) {

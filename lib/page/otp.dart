@@ -155,7 +155,8 @@ class _OtpPageState extends ConsumerState<OtpPage> {
 
       //
       if (status == 200) { // succeeded, either go to home page or 'enter details' page
-        bool isUserDataSet = resBody.surname && resBody.otherNames;
+        debugPrint('resBody: $resBody');
+        bool isUserDataSet = resBody['surname'] !=null && resBody['otherNames'] != null;
         debugPrint('isUserDataSet: $isUserDataSet');
         // go to homepage if user data set, else data entry page
         //ConsumerStatefulWidget nextScreen = isUserDataSet ? MainHomePage : MainHomePage;

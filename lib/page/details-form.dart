@@ -1,3 +1,5 @@
+// Screen for entering user details
+
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,18 +14,17 @@ import 'package:flutter_template/page/menu/register.dart';
 import 'package:flutter_template/utils/provider.dart';
 import 'package:flutter_template/utils/sputils.dart';
 
-class LoginPage extends ConsumerStatefulWidget {
+class DetailsFormPage extends ConsumerStatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _DetailsFormPageState createState() => _DetailsFormPageState();
 }
 
-class _LoginPageState extends ConsumerState<LoginPage> {
+class _DetailsFormPageState extends ConsumerState<DetailsFormPage> {
   // 响应空白处的焦点的Node
-  bool _isShowPassWord = false;
   FocusNode blankNode = FocusNode();
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _phoneController = TextEditingController();
-  TextEditingController _pwdController = TextEditingController();
+  TextEditingController _surnameController = TextEditingController();
+  TextEditingController _otherNamesController = TextEditingController();
+  //TextEditingController _phoneController = TextEditingController();
   GlobalKey _formKey = GlobalKey<FormState>();
 
   @override
@@ -92,7 +93,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           ),
           TextFormField(
             autofocus: false,
-            controller: _emailController,
+            controller: _surnameController,
             decoration: InputDecoration(
                 labelText: I18n.of(context)!.email,
                 hintText: I18n.of(context)!.emailHint,
@@ -107,7 +108,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           // phone
           TextFormField(
             autofocus: false,
-            controller: _phoneController,
+            controller: _otherNamesController,
             decoration: InputDecoration(
                 labelText: I18n.of(context)!.phone,
                 hintText: I18n.of(context)!.phoneHint,
@@ -120,7 +121,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   : I18n.of(context)!.phoneError;
           }),
           TextFormField(
-              controller: _pwdController,
+              controller: _phoneController,
               decoration: InputDecoration(
                   labelText: I18n.of(context)!.password,
                   hintText: I18n.of(context)!.passwordHint,
@@ -218,8 +219,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         });    
 
     XHttp.postJson("/user/login", {
-      "username": _emailController.text,
-      "password": _pwdController.text
+      "username": _surnameController.text,
+      "password": _phoneController.text
     }).then((response) {
       Navigator.pop(context);
       if (response['errorCode'] == 0) {

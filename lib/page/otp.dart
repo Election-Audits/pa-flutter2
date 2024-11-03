@@ -9,7 +9,8 @@ import 'package:flutter_template/core/widget/loading_dialog.dart';
 import 'package:flutter_template/generated/i18n.dart';
 import 'package:flutter_template/page/index.dart';
 import 'package:flutter_template/utils/provider.dart';
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
+import 'package:flutter_template/page/details-form.dart';
 
 
 
@@ -168,8 +169,13 @@ class _OtpPageState extends ConsumerState<OtpPage> {
             }),
             (_)=> false
           );
-        } else {
-
+        } else { // go to screen for entering user details
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+            builder: (context) {
+              return DetailsFormPage();
+            }),
+            (_)=> false
+          );
         }
 
       } else if (status == 400) {

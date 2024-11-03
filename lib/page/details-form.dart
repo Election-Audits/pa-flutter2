@@ -120,28 +120,7 @@ class _DetailsFormPageState extends ConsumerState<DetailsFormPage> {
                   ? null
                   : I18n.of(context)!.phoneError;
           }),
-          TextFormField(
-              controller: _phoneController,
-              decoration: InputDecoration(
-                  labelText: I18n.of(context)!.password,
-                  hintText: I18n.of(context)!.passwordHint,
-                  hintStyle: TextStyle(fontSize: 12),
-                  icon: Icon(Icons.lock),
-                  suffixIcon: IconButton(
-                      icon: Icon(
-                        _isShowPassWord
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                        color: Colors.black,
-                      ),
-                      onPressed: showPassWord)),
-              obscureText: !_isShowPassWord,
-              //校验密码
-              validator: (v) {
-                return v!.trim().length >= 6
-                    ? null
-                    : I18n.of(context)!.passwordError;
-              }),
+
           // 登录按钮
           Padding(
             padding: const EdgeInsets.only(top: 28.0),
@@ -152,13 +131,10 @@ class _DetailsFormPageState extends ConsumerState<DetailsFormPage> {
                     style: TextButton.styleFrom(
                         foregroundColor: Theme.of(context).primaryColor,
                         padding: EdgeInsets.all(15.0)),
-                    child: Text(I18n.of(context)!.login,
+                    child: Text(I18n.of(context)!.submit,
                         style: TextStyle(color: Colors.white)),
                     onPressed: () {
-                      //由于本widget也是Form的子代widget，所以可以通过下面方式获取FormState
-                      if (Form.of(context)!.validate()) {
                         onSubmit(context);
-                      }
                     },
                   );
                 })),
@@ -166,38 +142,11 @@ class _DetailsFormPageState extends ConsumerState<DetailsFormPage> {
             ),
           ),
 
-          //
-          // TODO: forgot password
-          // Register
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(I18n.of(context)!.noAccountQuestion),
-              TextButton(
-                child: Text(I18n.of(context)!.register,
-                    style: TextStyle(color: Colors.blueAccent)),
-                onPressed: () {
-                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                    builder: (context) {
-                      return RegisterPage();
-                    }),
-                    (_)=> false
-                  );
-                },
-              )
-            ],
-          ),
         ],
       ),
     );
   }
 
-  ///点击控制密码是否显示
-  void showPassWord() {
-    setState(() {
-      _isShowPassWord = !_isShowPassWord;
-    });
-  }
 
   void closeKeyboard(BuildContext context) {
     FocusScope.of(context).requestFocus(blankNode);
@@ -208,31 +157,41 @@ class _DetailsFormPageState extends ConsumerState<DetailsFormPage> {
     closeKeyboard(context);
 
     showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return LoadingDialog(
-            showContent: false,
-            backgroundColor: Colors.black38,
-            loadingView: SpinKitCircle(color: Colors.white),
-          );
-        });    
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return LoadingDialog(
+          showContent: false,
+          backgroundColor: Colors.black38,
+          loadingView: SpinKitCircle(color: Colors.white),
+        );
+      }
+    );
 
-    XHttp.postJson("/user/login", {
-      "username": _surnameController.text,
-      "password": _phoneController.text
-    }).then((response) {
-      Navigator.pop(context);
-      if (response['errorCode'] == 0) {
-        ref.read(userProfileProvider.notifier).changeNickName(response['data']['nickname']);
-        ToastUtils.toast(I18n.of(context)!.loginSuccess);
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
+    Map<String,dynamic> setData = {};
+    if (_surnameController.text.isNotEmpty) setData['surname'] = _surnameController.text.trim();
+    if (_otherNamesController.text.isNotEmpty) setData['otherNames'] = _otherNamesController.text.trim();
+
+    XHttp.putJson("/profile", setData)
+    .then((response) {
+      Navigator.pop(context); // pop spinner/loading dialog
+      int status = response['statusCode'];
+      var resBody = response.data;
+
+      // TODO: status 401 goto login screen
+      if (status == 200) { // go to home page
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
           builder: (context) {
             return MainHomePage();
-          },
-        ));
+          }),
+          (_)=> false
+        );
+      } else if (status == 400) { // display error message
+        debugPrint('otp confirm error: ${resBody?.errMsg}');
+        ToastUtils.error(resBody?.errMsg);
       } else {
-        ToastUtils.error(response['errorMsg']);
+        debugPrint('otp confirm error 500');
+        ToastUtils.error(I18n.of(context)!.somethingWentWrong);
       }
     }).catchError((onError) {
       Navigator.of(context).pop();

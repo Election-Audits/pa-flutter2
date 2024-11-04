@@ -87,39 +87,23 @@ class _DetailsFormPageState extends ConsumerState<DetailsFormPage> {
             child: FlutterLogo(
               size: 64,
           )),
-          Text(
-            I18n.of(context)!.enterEmailPhone,
-            textAlign: TextAlign.center,
-          ),
           TextFormField(
             autofocus: false,
             controller: _surnameController,
             decoration: InputDecoration(
-                labelText: I18n.of(context)!.email,
-                hintText: I18n.of(context)!.emailHint,
-                hintStyle: TextStyle(fontSize: 12),
-                icon: Icon(Icons.email)),
-            //校验用户名
-            validator: (v) {
-              return v!.trim().length > 0
-                  ? null
-                  : I18n.of(context)!.emailError;
-          }),
+              labelText: I18n.of(context)!.surname,
+              //icon: Icon(Icons.text_fields)
+            )
+          ),
           // phone
           TextFormField(
             autofocus: false,
             controller: _otherNamesController,
             decoration: InputDecoration(
-                labelText: I18n.of(context)!.phone,
-                hintText: I18n.of(context)!.phoneHint,
-                hintStyle: TextStyle(fontSize: 12),
-                icon: Icon(Icons.phone)),
-            //校验用户名
-            validator: (v) {
-              return v!.trim().length > 0
-                  ? null
-                  : I18n.of(context)!.phoneError;
-          }),
+                labelText: I18n.of(context)!.otherNames,
+                //icon: Icon(Icons.phone)
+            ),
+          ),
 
           // 登录按钮
           Padding(
@@ -153,7 +137,8 @@ class _DetailsFormPageState extends ConsumerState<DetailsFormPage> {
   }
 
   //验证通过提交数据
-  void onSubmit(BuildContext context) {
+  Future onSubmit(BuildContext context) async {
+    debugPrint('on submit clicked...');
     closeKeyboard(context);
 
     showDialog(
@@ -168,13 +153,15 @@ class _DetailsFormPageState extends ConsumerState<DetailsFormPage> {
       }
     );
 
-    Map<String,dynamic> setData = {};
-    if (_surnameController.text.isNotEmpty) setData['surname'] = _surnameController.text.trim();
-    if (_otherNamesController.text.isNotEmpty) setData['otherNames'] = _otherNamesController.text.trim();
+    Map<String,dynamic> dataSend = {};
+    if (_surnameController.text.isNotEmpty) dataSend['surname'] = _surnameController.text.trim();
+    if (_otherNamesController.text.isNotEmpty) dataSend['otherNames'] = _otherNamesController.text.trim();
+    debugPrint('data to send: $dataSend');
 
-    XHttp.putJson("/profile", setData)
-    .then((response) {
+    try {
+      var response = await XHttp.putJson("/profile", dataSend);
       Navigator.pop(context); // pop spinner/loading dialog
+      debugPrint('PUT /profile response: $response');
       int status = response['statusCode'];
       var resBody = response.data;
 
@@ -193,9 +180,14 @@ class _DetailsFormPageState extends ConsumerState<DetailsFormPage> {
         debugPrint('otp confirm error 500');
         ToastUtils.error(I18n.of(context)!.somethingWentWrong);
       }
-    }).catchError((onError) {
-      Navigator.of(context).pop();
-      ToastUtils.error(onError);
-    });
+    } catch (exc) {
+      debugPrint('caught PUT /profile error: $exc');
+      Navigator.of(context).pop(); // TODO: only pop conditionally if not popped in try block
+      ToastUtils.error(I18n.of(context)!.somethingWentWrong);
+    }
+      
+    // }).catchError((onError) {
+      
+    // });
   }
 }

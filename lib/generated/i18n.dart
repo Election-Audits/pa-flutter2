@@ -138,6 +138,8 @@ class I18n implements WidgetsLocalizations {
 	String get haveAccountQuestion => "Already have an account? ";
 	/// "Don't have an account? "
 	String get noAccountQuestion => "Don't have an account? ";
+	/// "other names"
+	String get otherNames => "other names";
 	/// "One Time Passcode"
 	String get otp => "One Time Passcode";
 	/// "must enter one time passcode"
@@ -154,6 +156,8 @@ class I18n implements WidgetsLocalizations {
 	String get somethingWentWrong => "Sorry, something went wrong. Try again later";
 	/// "submit"
 	String get submit => "submit";
+	/// "surname"
+	String get surname => "surname";
   
   @override
   String get reorderItemUp => 'Move up';

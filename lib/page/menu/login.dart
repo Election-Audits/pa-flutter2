@@ -9,6 +9,7 @@ import 'package:flutter_template/core/widget/loading_dialog.dart';
 import 'package:flutter_template/generated/i18n.dart';
 import 'package:flutter_template/page/index.dart';
 import 'package:flutter_template/page/menu/register.dart';
+import 'package:flutter_template/page/otp.dart';
 import 'package:flutter_template/utils/provider.dart';
 import 'package:flutter_template/utils/sputils.dart';
 
@@ -97,13 +98,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 labelText: I18n.of(context)!.email,
                 hintText: I18n.of(context)!.emailHint,
                 hintStyle: TextStyle(fontSize: 12),
-                icon: Icon(Icons.email)),
-            //校验用户名
-            validator: (v) {
-              return v!.trim().length > 0
-                  ? null
-                  : I18n.of(context)!.emailError;
-          }),
+                icon: Icon(Icons.email))
+          ),
           // phone
           TextFormField(
             autofocus: false,
@@ -112,13 +108,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 labelText: I18n.of(context)!.phone,
                 hintText: I18n.of(context)!.phoneHint,
                 hintStyle: TextStyle(fontSize: 12),
-                icon: Icon(Icons.phone)),
-            //校验用户名
-            validator: (v) {
-              return v!.trim().length > 0
-                  ? null
-                  : I18n.of(context)!.phoneError;
-          }),
+                icon: Icon(Icons.phone))
+          ),
           TextFormField(
               controller: _pwdController,
               decoration: InputDecoration(
@@ -207,32 +198,48 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     closeKeyboard(context);
 
     showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return LoadingDialog(
-            showContent: false,
-            backgroundColor: Colors.black38,
-            loadingView: SpinKitCircle(color: Colors.white),
-          );
-        });    
-
-    XHttp.postJson("/user/login", {
-      "username": _emailController.text,
-      "password": _pwdController.text
-    }).then((response) {
-      Navigator.pop(context);
-      if (response['errorCode'] == 0) {
-        ref.read(userProfileProvider.notifier).changeNickName(response['data']['nickname']);
-        ToastUtils.toast(I18n.of(context)!.loginSuccess);
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) {
-            return MainHomePage();
-          },
-        ));
-      } else {
-        ToastUtils.error(response['errorMsg']);
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return LoadingDialog(
+          showContent: false,
+          backgroundColor: Colors.black38,
+          loadingView: SpinKitCircle(color: Colors.white),
+        );
       }
+    );
+
+    var dataSend = {"password": _pwdController.text};
+    var email = _emailController.text.trim();
+    var phone = _phoneController.text.trim();
+    // using either email or phone, check before sending
+    if (_emailController.text.isNotEmpty) {
+      dataSend['email'] = email;
+    }
+    if (_phoneController.text.isNotEmpty) {
+      dataSend['phone'] = phone;
+    }
+
+    XHttp.putJson("/login", dataSend)
+    .then((response) {
+      Navigator.of(context).pop(); // pop loading dialog/spinner
+      debugPrint('/login response: $response');
+      var status = response.statusCode;
+      debugPrint('status code: $status');
+      if (status == 200) { // transition to OTP screen
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) {
+            return OtpPage(isLogin: true, email: email, phone: phone);
+          })
+        );
+      } else if (status == 400) { // display error message that was sent
+        debugPrint('/login error: ${response?.data?.errMsg}');
+        ToastUtils.error(response?.data?.errMsg);
+      } else { // something went wrong
+        debugPrint('/login error 500');
+        ToastUtils.error(I18n.of(context)!.somethingWentWrong);
+      }
+
     }).catchError((onError) {
       Navigator.of(context).pop();
       ToastUtils.error(onError);

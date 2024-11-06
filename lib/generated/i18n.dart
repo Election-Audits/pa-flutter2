@@ -126,6 +126,8 @@ class I18n implements WidgetsLocalizations {
 	String get agreePrivacy => "Privacy agreement agreed!";
 	/// "Dark Theme"
 	String get darkTheme => "Dark Theme";
+	/// "Add Polling Agent"
+	String get addSubAgents => "Add Polling Agent";
 	/// "email"
 	String get email => "email";
 	/// "must enter email"

@@ -11,6 +11,7 @@ import 'package:flutter_template/page/index.dart';
 import 'package:flutter_template/utils/provider.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter_template/page/details-form.dart';
+import 'package:flutter_template/utils/sputils.dart';
 
 
 
@@ -156,12 +157,14 @@ class _OtpPageState extends ConsumerState<OtpPage> {
 
       //
       if (status == 200) { // succeeded, either go to home page or 'enter details' page
+        // cookie was returned and saved by DIO interceptor. Indicate cookie saved
+        await SPUtils.setHasCookie(true);
+
         debugPrint('resBody: $resBody');
         bool isUserDataSet = resBody['surname'] !=null && resBody['otherNames'] != null;
         debugPrint('isUserDataSet: $isUserDataSet');
         // go to homepage if user data set, else data entry page
         //ConsumerStatefulWidget nextScreen = isUserDataSet ? MainHomePage : MainHomePage;
-        // TODO: ensure cookie saved
         if (isUserDataSet) { // go to homepage
           Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
             builder: (context) {

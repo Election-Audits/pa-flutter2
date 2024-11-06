@@ -48,6 +48,7 @@
     "agreePrivacy": "Privacy agreement agreed!",
     "darkTheme": "Dark Theme",
 
+    "addSubAgents": "Add Polling Agent",
     "email": "email",
     "emailError": "must enter email",
     "emailHint": "email@example.com",

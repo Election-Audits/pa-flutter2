@@ -3,11 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_template/core/utils/toast.dart';
 import 'package:flutter_template/core/utils/xuifont.dart';
 import 'package:flutter_template/generated/i18n.dart';
+import 'package:flutter_template/utils/provider.dart';
+
 import 'package:flutter_template/page/menu/about.dart';
 import 'package:flutter_template/page/menu/login.dart';
 import 'package:flutter_template/page/menu/settings.dart';
 import 'package:flutter_template/page/menu/sponsor.dart';
-import 'package:flutter_template/utils/provider.dart';
+import 'package:flutter_template/page/subagent/agent.dart';
+
 
 class MenuDrawer extends ConsumerWidget {
   const MenuDrawer({
@@ -77,8 +80,9 @@ class MenuDrawer extends ConsumerWidget {
                   leading: Icon(Icons.list),
                   title: Text(I18n.of(context)!.subAgents),
                   onTap: () {
-                    ref.read(appStatusProvider.notifier).change(TAB_AGENTS_INDEX);
-                    Navigator.pop(context);
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => AgentPage(),
+                    ));
                   },
                   selected: status == TAB_AGENTS_INDEX,
                 ),

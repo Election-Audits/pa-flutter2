@@ -76,7 +76,14 @@ class SPUtils {
 
   ///是否已登陆
   static bool isLogined() {
-    String? nickName = getNickName();
-    return nickName != null && nickName.isNotEmpty;
+    // String? nickName = getNickName();
+    // return nickName != null && nickName.isNotEmpty;
+    return _spf!.getBool('key_has_cookie') ?? false;
   }
+
+  ///set if user has cookie or not
+  static Future<bool> setHasCookie(bool hasCookie) {
+    return _spf!.setBool('key_has_cookie', hasCookie);
+  }
+
 }

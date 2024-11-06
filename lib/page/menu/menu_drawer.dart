@@ -75,31 +75,42 @@ class MenuDrawer extends ConsumerWidget {
                 ),
                 ListTile(
                   leading: Icon(Icons.list),
-                  title: Text(I18n.of(context)!.category),
+                  title: Text(I18n.of(context)!.subAgents),
                   onTap: () {
-                    ref.read(appStatusProvider.notifier).change(TAB_CATEGORY_INDEX);
+                    ref.read(appStatusProvider.notifier).change(TAB_AGENTS_INDEX);
                     Navigator.pop(context);
                   },
-                  selected: status == TAB_CATEGORY_INDEX,
+                  selected: status == TAB_AGENTS_INDEX,
                 ),
                 ListTile(
                   leading: Icon(Icons.local_activity),
-                  title: Text(I18n.of(context)!.activity),
+                  title: Text(I18n.of(context)!.loginCodes),
                   onTap: () {
-                    ref.read(appStatusProvider.notifier).change(TAB_ACTIVITY_INDEX);
+                    ref.read(appStatusProvider.notifier).change(TAB_LOGIN_CODES_INDEX);
                     Navigator.pop(context);
                   },
-                  selected: status == TAB_ACTIVITY_INDEX,
+                  selected: status == TAB_LOGIN_CODES_INDEX,
+                ),
+                Divider(height: 1.0, color: Colors.grey),
+                ListTile(
+                  leading: Icon(Icons.notifications),
+                  title: Text(I18n.of(context)!.myElectAreas),
+                  onTap: () {
+                    ref.read(appStatusProvider.notifier).change(TAB_ELECT_AREAS_INDEX);
+                    Navigator.pop(context);
+                  },
+                  selected: status == TAB_ELECT_AREAS_INDEX,
                 ),
                 ListTile(
                   leading: Icon(Icons.notifications),
-                  title: Text(I18n.of(context)!.message),
+                  title: Text(I18n.of(context)!.uploadResults),
                   onTap: () {
-                    ref.read(appStatusProvider.notifier).change(TAB_MESSAGE_INDEX);
+                    ref.read(appStatusProvider.notifier).change(TAB_UPLOAD_RESULTS_INDEX);
                     Navigator.pop(context);
                   },
-                  selected: status == TAB_MESSAGE_INDEX,
+                  selected: status == TAB_UPLOAD_RESULTS_INDEX,
                 ),
+                Divider(height: 1.0, color: Colors.grey),
                 ListTile(
                   leading: Icon(Icons.person),
                   title: Text(I18n.of(context)!.profile),

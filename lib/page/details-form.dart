@@ -48,7 +48,7 @@ class _DetailsFormPageState extends ConsumerState<DetailsFormPage> {
         Scaffold(
           appBar: AppBar(
             // leading: _leading(context),
-            //title: Text(I18n.of(context)!.login),
+            title: Text(I18n.of(context)!.enterDetails),
             //actions: <Widget>[],
           ),
           body: Column(
@@ -162,7 +162,7 @@ class _DetailsFormPageState extends ConsumerState<DetailsFormPage> {
       var response = await XHttp.putJson("/profile", dataSend);
       Navigator.pop(context); // pop spinner/loading dialog
       debugPrint('PUT /profile response: $response');
-      int status = response['statusCode'];
+      int status = response.statusCode;
       var resBody = response.data;
 
       // TODO: status 401 goto login screen
@@ -182,7 +182,7 @@ class _DetailsFormPageState extends ConsumerState<DetailsFormPage> {
       }
     } catch (exc) {
       debugPrint('caught PUT /profile error: $exc');
-      Navigator.of(context).pop(); // TODO: only pop conditionally if not popped in try block
+      // Navigator.of(context).pop(); // TODO: only pop conditionally if not popped in try block
       ToastUtils.error(I18n.of(context)!.somethingWentWrong);
     }
       

@@ -132,10 +132,16 @@ class I18n implements WidgetsLocalizations {
 	String get emailError => "must enter email";
 	/// "email@example.com"
 	String get emailHint => "email@example.com";
+	/// "Enter details"
+	String get enterDetails => "Enter details";
 	/// "Enter email or phone number"
 	String get enterEmailPhone => "Enter email or phone number";
 	/// "Already have an account? "
 	String get haveAccountQuestion => "Already have an account? ";
+	/// "Login Codes"
+	String get loginCodes => "Login Codes";
+	/// "My Electoral Areas"
+	String get myElectAreas => "My Electoral Areas";
 	/// "Don't have an account? "
 	String get noAccountQuestion => "Don't have an account? ";
 	/// "other names"
@@ -154,10 +160,14 @@ class I18n implements WidgetsLocalizations {
 	String get phoneHint => "0240001234";
 	/// "Sorry, something went wrong. Try again later"
 	String get somethingWentWrong => "Sorry, something went wrong. Try again later";
-	/// "submit"
-	String get submit => "submit";
+	/// "Sub Agents"
+	String get subAgents => "Sub Agents";
+	/// "Submit"
+	String get submit => "Submit";
 	/// "surname"
 	String get surname => "surname";
+	/// "Upload Results"
+	String get uploadResults => "Upload Results";
   
   @override
   String get reorderItemUp => 'Move up';

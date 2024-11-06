@@ -161,16 +161,21 @@ class UserProfile extends StateNotifier<String?> {
 const int TAB_HOME_INDEX = 0;
 
 ///分类
-const int TAB_CATEGORY_INDEX = 1;
+//const int TAB_CATEGORY_INDEX = 1;
+const int TAB_AGENTS_INDEX = 1;
 
 ///活动
-const int TAB_ACTIVITY_INDEX = 2;
+//const int TAB_ACTIVITY_INDEX = 2;
+const int TAB_LOGIN_CODES_INDEX = 2;
 
 ///消息
-const int TAB_MESSAGE_INDEX = 3;
+//const int TAB_MESSAGE_INDEX = 3;
+const int TAB_ELECT_AREAS_INDEX = 3;
+
+const int TAB_UPLOAD_RESULTS_INDEX = 4;
 
 ///我的
-const int TAB_PROFILE_INDEX = 4;
+const int TAB_PROFILE_INDEX = 5;
 
 ///应用状态
 class AppTabIndex extends StateNotifier<int> {

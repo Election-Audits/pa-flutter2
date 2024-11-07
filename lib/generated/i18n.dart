@@ -146,8 +146,12 @@ class I18n implements WidgetsLocalizations {
 	String get myElectAreas => "My Electoral Areas";
 	/// "Don't have an account? "
 	String get noAccountQuestion => "Don't have an account? ";
+	/// "${numAgents} polling agent(s) added"
+	String numberAgentsAdded(String numAgents) => "${numAgents} polling agent(s) added";
 	/// "other names"
 	String get otherNames => "other names";
+	/// "other names (optional)"
+	String get otherNamesOptional => "other names (optional)";
 	/// "One Time Passcode"
 	String get otp => "One Time Passcode";
 	/// "must enter one time passcode"
@@ -160,6 +164,8 @@ class I18n implements WidgetsLocalizations {
 	String get phoneError => "must enter phone number";
 	/// "0240001234"
 	String get phoneHint => "0240001234";
+	/// "Previously added"
+	String get previouslyAdded => "Previously added";
 	/// "Sorry, something went wrong. Try again later"
 	String get somethingWentWrong => "Sorry, something went wrong. Try again later";
 	/// "Sub Agents"
@@ -168,6 +174,8 @@ class I18n implements WidgetsLocalizations {
 	String get submit => "Submit";
 	/// "surname"
 	String get surname => "surname";
+	/// "surname (optional)"
+	String get surnameOptional => "surname (optional)";
 	/// "Upload Results"
 	String get uploadResults => "Upload Results";
   

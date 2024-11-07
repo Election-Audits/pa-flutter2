@@ -11,6 +11,7 @@ import 'package:flutter_template/page/index.dart';
 import 'package:flutter_template/utils/provider.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter_template/page/details-form.dart';
+import 'package:flutter_template/page/subagent/agent-form.dart';
 import 'package:flutter_template/utils/sputils.dart';
 
 
@@ -67,7 +68,11 @@ class _AgentPageState extends ConsumerState<AgentPage> {
                         child: Text(I18n.of(context)!.addSubAgents,
                             style: TextStyle(color: Colors.white)),
                         onPressed: () { // navigate to screen for adding subagents
-
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) {
+                              return AgentFormPage(numAgentsAdded: 0,); // TODO: set numAgentsAdded
+                            }
+                          ));
                         },
                       ),//;
                     //})),

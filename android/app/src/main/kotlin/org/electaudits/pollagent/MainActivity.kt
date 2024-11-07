@@ -1,4 +1,4 @@
-package com.xuexiang.flutter_template
+package org.electaudits.pollagent
 
 import io.flutter.embedding.android.FlutterActivity
 

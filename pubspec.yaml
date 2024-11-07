@@ -43,6 +43,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   i18n_json: ^1.0.0
+  change_app_package_name: ^1.4.0
 
 # 字体、图标、图片等资源加载
 flutter:

@@ -22,6 +22,7 @@ class XHttp {
   static void init() {
     ///初始化cookie
     PathUtils.getDocumentsDirPath().then((value) {
+      debugPrint('documents dir path: $value');
       var cookieJar =
           PersistCookieJar(storage: FileStorage(value + "/.cookies/"));
       dio.interceptors.add(CookieManager(cookieJar));
@@ -42,13 +43,13 @@ class XHttp {
     //添加拦截器
     dio.interceptors
         .add(InterceptorsWrapper(onRequest: (RequestOptions options, handler) {
-      print("请求之前");
+      debugPrint("on request..");
       return handler.next(options);
     }, onResponse: (Response response, handler) {
-      print("响应之前");
+      debugPrint("on response..");
       return handler.next(response);
     }, onError: (DioException e, handler) {
-      print("错误之前");
+      debugPrint('on error..');
       handleError(e);
       return handler.next(e);
     }));
@@ -86,7 +87,7 @@ class XHttp {
     } else {
       response = await dio.get(url, options: Options(validateStatus: (_)=>true));
     }
-    return response.data;
+    return response; // .data;
   }
 
   ///post 表单请求

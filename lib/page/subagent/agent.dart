@@ -33,9 +33,32 @@ class _AgentPageState extends ConsumerState<AgentPage> {
 
   _AgentPageState(this.isLoginCodeScreen) : super();
 
+  // array of subAgents to add
+  // final List subAgents = [
+  //   {"name": "Jacob Tetteh", "email": "p1-1@example.com", "phone": "0240010001", "hasSignedUp": true},
+  //   {"name": "Eugenia Doe", "email": "p1-2@example.com", "hasSignedUp": false}
+  // ];
+
+  ///
+  // Widget processSubAgent(var input) {
+  //   return Text("Ok here i am");
+  // }
+
+  final List<Widget> agentWidgets = [];
+  // [
+  //   Column(children: [
+  //     Text("Name One"), Text("0240010001"), Divider()
+  //   ],),
+  //   Column(children: [
+  //     Text("Name Two"), Text("blah@example.com"), Divider()
+  //   ],)
+  // ];
+
+
   @override
   void initState() {
     super.initState();
+    // get the subAgents
   }
 
 
@@ -82,7 +105,7 @@ class _AgentPageState extends ConsumerState<AgentPage> {
               Divider(),
               ListView.builder(
                 shrinkWrap: true,
-                itemCount: 2,
+                itemCount: agentWidgets.length,
                 itemBuilder: (BuildContext context, int index) {
                   // return Container(
                   //   //width: 400, // added
@@ -90,28 +113,17 @@ class _AgentPageState extends ConsumerState<AgentPage> {
                   //   color: Colors.amber[100+200*index],
                   //   child: Center(child: Text('Entry $index')),
                   // );
-                  return //SizedBox.expand(
-                    //child: 
-                    // Row(
-                    //   mainAxisSize: MainAxisSize.max,
-                    //   children: [
-                    //     Text('$index'),
-                    //     VerticalDivider(),
-                        Column(
-                          children: [
-                            Text('My name'),
-                            Text('my email address'),
-                            Text('my phone number'),
-                            Text('Not signed up', style: TextStyle(color: Colors.red),),
-                            //SizedBox(width: 50, height: 25, )
-                            Divider()
-                          ],
-                        );
-                      // ],
-                    // );
+                  return agentWidgets[index];
+                  //Column(
+                          // children: [
+                          //   Text('My name'),
+                          //   Text('my email address'),
+                          //   Text('my phone number'),
+                          //   Text('Not signed up', style: TextStyle(color: Colors.red),),
+                          //   //SizedBox(width: 50, height: 25, )
+                          //   Divider()
+                          // ],
                   //);
-                  
-                 
                 }
               )
             ],
@@ -123,34 +135,59 @@ class _AgentPageState extends ConsumerState<AgentPage> {
   }
 
 
-  void closeKeyboard(BuildContext context) {
-    FocusScope.of(context).requestFocus(blankNode);
+  /// get subAgents on init
+  Future getSubAgentsQuery() async {
+    try {
+      var response = await XHttp.get('/subagents');
+      int status = response.statusCode;
+
+      if (status == 200) {
+        // update agentWidgets
+        setState(() {
+          
+        });
+
+      } else if (status == 400) {
+        debugPrint('GET /subagents error: ${response?.data?.errMsg}');
+        ToastUtils.error(response.data?.errMsg);
+      } else {
+        debugPrint('GET /subagents error 500');
+        ToastUtils.error(I18n.of(context)!.somethingWentWrong);
+      }
+
+    } catch (exc) {
+      debugPrint("caught exc on getSubAgentsQuery: $exc");
+      ToastUtils.error(I18n.of(context)!.somethingWentWrong);
+    }
+
+
+    return 5;
   }
 
+
+  // void closeKeyboard(BuildContext context) {
+  //   FocusScope.of(context).requestFocus(blankNode);
+  // }
 
   ///
-  Future onSubmit(BuildContext context) async {
-    closeKeyboard(context);
+  // Future onSubmit(BuildContext context) async {
+  //   closeKeyboard(context);
 
-    // show loading dialog/spinner
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return LoadingDialog(
-          showContent: false,
-          backgroundColor: Colors.black38,
-          loadingView: SpinKitCircle(color: Colors.white),
-        );
-      }
-    );
+  //   // show loading dialog/spinner
+  //   showDialog(
+  //     context: context,
+  //     barrierDismissible: false,
+  //     builder: (BuildContext context) {
+  //       return LoadingDialog(
+  //         showContent: false,
+  //         backgroundColor: Colors.black38,
+  //         loadingView: SpinKitCircle(color: Colors.white),
+  //       );
+  //     }
+  //   );
 
-    // send data
-    
-
-
-  }
-
+  //   // send data 
+  // }
 
 
 }

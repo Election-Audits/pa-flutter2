@@ -146,6 +146,8 @@ class I18n implements WidgetsLocalizations {
 	String get myElectAreas => "My Electoral Areas";
 	/// "Don't have an account? "
 	String get noAccountQuestion => "Don't have an account? ";
+	/// "not signed up"
+	String get notSignedUp => "not signed up";
 	/// "${numAgents} polling agent(s) added"
 	String numberAgentsAdded(String numAgents) => "${numAgents} polling agent(s) added";
 	/// "other names"
@@ -166,6 +168,8 @@ class I18n implements WidgetsLocalizations {
 	String get phoneHint => "0240001234";
 	/// "Previously added"
 	String get previouslyAdded => "Previously added";
+	/// "signed up"
+	String get signedUp => "signed up";
 	/// "Sorry, something went wrong. Try again later"
 	String get somethingWentWrong => "Sorry, something went wrong. Try again later";
 	/// "Sub Agents"

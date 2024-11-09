@@ -33,34 +33,18 @@ class _AgentPageState extends ConsumerState<AgentPage> {
 
   _AgentPageState(this.isLoginCodeScreen) : super();
 
-  // array of subAgents to add
-  // final List subAgents = [
-  //   {"name": "Jacob Tetteh", "email": "p1-1@example.com", "phone": "0240010001", "hasSignedUp": true},
-  //   {"name": "Eugenia Doe", "email": "p1-2@example.com", "hasSignedUp": false}
-  // ];
-
-  ///
-  // Widget processSubAgent(var input) {
-  //   return Text("Ok here i am");
-  // }
-
-  final List<Widget> agentWidgets = [];
-  // [
-  //   Column(children: [
-  //     Text("Name One"), Text("0240010001"), Divider()
-  //   ],),
-  //   Column(children: [
-  //     Text("Name Two"), Text("blah@example.com"), Divider()
-  //   ],)
-  // ];
+  List<Widget> agentWidgets = [];
+  int numAgentsAdded = 0;
 
 
   @override
   void initState() {
     super.initState();
     // get the subAgents
+    getSubAgentsQuery();
   }
 
+  //@override void didChangeDependencies ()
 
   @override
   Widget build(BuildContext context) {
@@ -77,31 +61,22 @@ class _AgentPageState extends ConsumerState<AgentPage> {
             children: [
               // show 'add agent' button
               isLoginCodeScreen ? SizedBox.shrink()
-              : //Padding(
-                //padding: const EdgeInsets.only(top: 28.0),
-                //child: 
-                  //Row(
-                  //children: <Widget>[
-                    //Expanded(child: Builder(builder: (context) {
-                      //return 
-                      ElevatedButton(
-                        style: TextButton.styleFrom(
-                            foregroundColor: Theme.of(context).primaryColor,
-                            padding: EdgeInsets.all(15.0)),
-                        child: Text(I18n.of(context)!.addSubAgents,
-                            style: TextStyle(color: Colors.white)),
-                        onPressed: () { // navigate to screen for adding subagents
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) {
-                              return AgentFormPage(numAgentsAdded: 0,); // TODO: set numAgentsAdded
-                            }
-                          ));
-                        },
-                      ),//;
-                    //})),
-                  //],
-                //),
-              //)
+              : ElevatedButton(
+                  style: TextButton.styleFrom(
+                      foregroundColor: Theme.of(context).primaryColor,
+                      padding: EdgeInsets.all(15.0)),
+                  child: Text(I18n.of(context)!.addSubAgents,
+                      style: TextStyle(color: Colors.white)),
+                  onPressed: () { // navigate to screen for adding subagents
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) {
+                        return AgentFormPage(numAgentsAdded: numAgentsAdded,);
+                      }
+                    ));
+                  },
+                ),
+              isLoginCodeScreen ? SizedBox.shrink() 
+              : Text(I18n.of(context)!.numberAgentsAdded(numAgentsAdded.toString())),
               Divider(),
               ListView.builder(
                 shrinkWrap: true,
@@ -114,16 +89,6 @@ class _AgentPageState extends ConsumerState<AgentPage> {
                   //   child: Center(child: Text('Entry $index')),
                   // );
                   return agentWidgets[index];
-                  //Column(
-                          // children: [
-                          //   Text('My name'),
-                          //   Text('my email address'),
-                          //   Text('my phone number'),
-                          //   Text('Not signed up', style: TextStyle(color: Colors.red),),
-                          //   //SizedBox(width: 50, height: 25, )
-                          //   Divider()
-                          // ],
-                  //);
                 }
               )
             ],
@@ -137,14 +102,61 @@ class _AgentPageState extends ConsumerState<AgentPage> {
 
   /// get subAgents on init
   Future getSubAgentsQuery() async {
+    debugPrint('getSubAgentsQuery..');
+
+    // show loading dialog/spinner
+    // showDialog(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (BuildContext context) {
+    //     return LoadingDialog(
+    //       showContent: false,
+    //       backgroundColor: Colors.black38,
+    //       loadingView: SpinKitCircle(color: Colors.white),
+    //     );
+    //   }
+    // );
+
     try {
       var response = await XHttp.get('/subagents');
+
+      ///Navigator.of(context).pop(); // pop loading dialog/spinner
       int status = response.statusCode;
 
       if (status == 200) {
         // update agentWidgets
+        var subAgents = response.data;
+        debugPrint('sub agents: $subAgents');
+
+        List<Widget> tmpWidgets = [];
+        //tmpWidgets.addAll(
+        subAgents.forEach((agent){
+          debugPrint('agent: $agent');
+          var name = '';
+          if (agent.containsKey('otherNames')) name += agent['otherNames'];
+          if (agent.containsKey('surname')) name += ' ${agent['surname']}';
+          // check if user completed signup
+          bool emailConfirmed = agent.containsKey('emailConfirmed') && agent.emailConfirmed;
+          bool phoneConfirmed = agent.containsKey('phoneConfirmed') && agent.phoneConfirmed;
+          bool hasSignedUp = emailConfirmed || phoneConfirmed;
+
+          tmpWidgets.add(
+            Column(children: [ // return
+              name.isNotEmpty ? Text(name) : SizedBox.shrink(),
+              agent.containsKey('email') ? Text(agent['email']) : SizedBox.shrink(),
+              agent.containsKey('phone') ? Text(agent['phone']) : SizedBox.shrink(),
+              hasSignedUp ? Text(I18n.of(context)!.signedUp, style: TextStyle(color: Colors.green),) 
+              : Text(I18n.of(context)!.notSignedUp, style: TextStyle(color: Colors.red)),
+              Divider()
+              ],
+            )
+          );
+        });
+        //);
+
         setState(() {
-          
+          numAgentsAdded = subAgents.length;
+          agentWidgets = tmpWidgets;
         });
 
       } else if (status == 400) {
@@ -163,31 +175,5 @@ class _AgentPageState extends ConsumerState<AgentPage> {
 
     return 5;
   }
-
-
-  // void closeKeyboard(BuildContext context) {
-  //   FocusScope.of(context).requestFocus(blankNode);
-  // }
-
-  ///
-  // Future onSubmit(BuildContext context) async {
-  //   closeKeyboard(context);
-
-  //   // show loading dialog/spinner
-  //   showDialog(
-  //     context: context,
-  //     barrierDismissible: false,
-  //     builder: (BuildContext context) {
-  //       return LoadingDialog(
-  //         showContent: false,
-  //         backgroundColor: Colors.black38,
-  //         loadingView: SpinKitCircle(color: Colors.white),
-  //       );
-  //     }
-  //   );
-
-  //   // send data 
-  // }
-
 
 }

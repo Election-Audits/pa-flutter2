@@ -36,12 +36,14 @@ class _AgentPageState extends ConsumerState<AgentPage> {
   List<Widget> agentWidgets = [];
   int numAgentsAdded = 0;
 
+  Future<String>? queryDone;
+
 
   @override
   void initState() {
     super.initState();
     // get the subAgents
-    getSubAgentsQuery();
+    queryDone = getSubAgentsQuery();
   }
 
   //@override void didChangeDependencies ()
@@ -55,8 +57,9 @@ class _AgentPageState extends ConsumerState<AgentPage> {
         //actions: <Widget>[],
       ),
       body: SizedBox.expand( // make child column take up the whole width
-        child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
+        child: Flex(
+          //Column(
+            direction: Axis.vertical,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // show 'add agent' button
@@ -67,32 +70,71 @@ class _AgentPageState extends ConsumerState<AgentPage> {
                       padding: EdgeInsets.all(15.0)),
                   child: Text(I18n.of(context)!.addSubAgents,
                       style: TextStyle(color: Colors.white)),
-                  onPressed: () { // navigate to screen for adding subagents
-                    Navigator.of(context).push(MaterialPageRoute(
+                  onPressed: () async { // navigate to screen for adding subagents
+                    await Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) {
                         return AgentFormPage(numAgentsAdded: numAgentsAdded,);
                       }
                     ));
+                    // call function to query num agents
+                    //getSubAgentsQuery(); //await
                   },
                 ),
               isLoginCodeScreen ? SizedBox.shrink() 
               : Text(I18n.of(context)!.numberAgentsAdded(numAgentsAdded.toString())),
               Divider(),
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: agentWidgets.length,
-                itemBuilder: (BuildContext context, int index) {
-                  // return Container(
-                  //   //width: 400, // added
-                  //   height: 50,
-                  //   color: Colors.amber[100+200*index],
-                  //   child: Center(child: Text('Entry $index')),
-                  // );
-                  return agentWidgets[index];
-                }
-              )
-            ],
-          )
+              //Expanded(
+              // Flex(
+              //   direction: Axis.vertical,
+              //   children: [
+                //child:
+                  FutureBuilder(
+                    future: queryDone, 
+                    builder: (context,snapshot) {
+                      // If your data is not loading show loader
+                      if (!snapshot.hasData) {
+                        return LoadingDialog(
+                          showContent: false,
+                          backgroundColor: Colors.black38,
+                          loadingView: SpinKitCircle(color: Colors.white),
+                        );
+                      // If your data is not loading show loader
+                      } else if (snapshot.hasError) {
+                        debugPrint('Futurebuilder error getting sub agents'); // TODO: Toast
+                        return Text(I18n.of(context)!.somethingWentWrong);
+                      }
+                      // return loaded data
+                      return //Flex(
+                        // direction: Axis.vertical,
+                        // children: [
+                          Expanded(
+                            child: ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              //itemExtent: 100,
+                              shrinkWrap: true,
+                              itemCount: agentWidgets.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                // return Container(
+                                //   //width: 400, // added
+                                //   height: 50,
+                                //   color: Colors.amber[100+200*index],
+                                //   child: Center(child: Text('Entry $index')),
+                                // );
+                                return agentWidgets[index];
+                              }
+                            )
+                          );
+                        //],
+                      //);
+                      
+                    }
+                  ),
+                ]
+                
+              ),
+                
+            //],
+          //)
         
         )
         
@@ -101,21 +143,8 @@ class _AgentPageState extends ConsumerState<AgentPage> {
 
 
   /// get subAgents on init
-  Future getSubAgentsQuery() async {
+  Future<String> getSubAgentsQuery() async {
     debugPrint('getSubAgentsQuery..');
-
-    // show loading dialog/spinner
-    // showDialog(
-    //   context: context,
-    //   barrierDismissible: false,
-    //   builder: (BuildContext context) {
-    //     return LoadingDialog(
-    //       showContent: false,
-    //       backgroundColor: Colors.black38,
-    //       loadingView: SpinKitCircle(color: Colors.white),
-    //     );
-    //   }
-    // );
 
     try {
       var response = await XHttp.get('/subagents');
@@ -129,7 +158,7 @@ class _AgentPageState extends ConsumerState<AgentPage> {
         debugPrint('sub agents: $subAgents');
 
         List<Widget> tmpWidgets = [];
-        //tmpWidgets.addAll(
+
         subAgents.forEach((agent){
           debugPrint('agent: $agent');
           var name = '';
@@ -152,7 +181,6 @@ class _AgentPageState extends ConsumerState<AgentPage> {
             )
           );
         });
-        //);
 
         setState(() {
           numAgentsAdded = subAgents.length;
@@ -172,8 +200,7 @@ class _AgentPageState extends ConsumerState<AgentPage> {
       ToastUtils.error(I18n.of(context)!.somethingWentWrong);
     }
 
-
-    return 5;
+    return "done"; // ensure FutureBuilder has return data
   }
 
 }

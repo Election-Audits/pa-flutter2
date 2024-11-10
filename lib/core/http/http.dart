@@ -13,15 +13,16 @@ class XHttp {
 
   ///网络请求配置
   static final Dio dio = Dio(BaseOptions(
-    baseUrl: "https://www.wanandroid.com",
+    baseUrl: "https://test.api-agent.electaudits.org",
     connectTimeout: Duration(milliseconds: 5000),
-    receiveTimeout: Duration(milliseconds: 3000),
+    receiveTimeout: Duration(milliseconds: 20000),
   ));
 
   ///初始化dio
   static void init() {
     ///初始化cookie
     PathUtils.getDocumentsDirPath().then((value) {
+      debugPrint('documents dir path: $value');
       var cookieJar =
           PersistCookieJar(storage: FileStorage(value + "/.cookies/"));
       dio.interceptors.add(CookieManager(cookieJar));
@@ -30,10 +31,10 @@ class XHttp {
     (dio.httpClientAdapter as IOHttpClientAdapter).createHttpClient = () {
       var client = HttpClient();
 
-      client.findProxy = (uri) {
-        // 设置代理服务器地址和端口号
-        return "PROXY 192.168.2.8:8888";
-      };
+      // client.findProxy = (uri) {
+      //   // 设置代理服务器地址和端口号
+      //   return "PROXY 192.168.2.8:8888";
+      // };
       client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
       return client;
     };
@@ -42,13 +43,13 @@ class XHttp {
     //添加拦截器
     dio.interceptors
         .add(InterceptorsWrapper(onRequest: (RequestOptions options, handler) {
-      print("请求之前");
+      debugPrint("on request..");
       return handler.next(options);
     }, onResponse: (Response response, handler) {
-      print("响应之前");
+      debugPrint("on response..");
       return handler.next(response);
     }, onError: (DioException e, handler) {
-      print("错误之前");
+      debugPrint('on error..');
       handleError(e);
       return handler.next(e);
     }));
@@ -58,22 +59,22 @@ class XHttp {
   static void handleError(DioException e) {
     switch (e.type) {
       case DioExceptionType.connectionTimeout:
-        print("连接超时");
+        print("connection timeout");
         break;
       case DioExceptionType.sendTimeout:
-        print("请求超时");
+        print("send timeout");
         break;
       case DioExceptionType.receiveTimeout:
-        print("响应超时");
+        print("receive timeout");
         break;
       case DioExceptionType.badResponse:
-        print("出现异常");
+        print("bad response");
         break;
       case DioExceptionType.cancel:
-        print("请求取消");
+        print("cancel");
         break;
       default:
-        print("未知错误");
+        print("unknown http error");
         break;
     }
   }
@@ -82,24 +83,42 @@ class XHttp {
   static Future get(String url, [Map<String, dynamic>? params]) async {
     Response response;
     if (params != null) {
-      response = await dio.get(url, queryParameters: params);
+      response = await dio.get(url, queryParameters: params, options: Options(validateStatus: (_)=>true));
     } else {
-      response = await dio.get(url);
+      response = await dio.get(url, options: Options(validateStatus: (_)=>true));
     }
-    return response.data;
+    return response; // .data;
   }
 
   ///post 表单请求
-  static Future post(String url, [Map<String, dynamic>? params]) async {
-    Response response = await dio.post(url, queryParameters: params);
-    debugPrint(response.data.toString());
-    return response.data;
-  }
+  // static Future post(String url, [Map<String, dynamic>? params]) async {
+  //   Response response = await dio.post(url, queryParameters: params);
+  //   debugPrint(response.data.toString());
+  //   return response; //.data;
+  // }
 
   ///post body请求
   static Future postJson(String url, [Map<String, dynamic>? data]) async {
-    Response response = await dio.post(url, data: data);
-    return response.data;
+    // set validateStatus option so doesn't throw on status 400 or 500
+    Response response = await dio.post(url, data: data, options: Options(validateStatus: (_)=>true));
+    return response; //.data;
+    // Response? response;
+    // try {
+    //   response = await dio.post(url, data: data);
+    // } catch (exc) {
+    //   return exc;
+    // }
+    // finally {
+    //   return response;
+    // }
+  }
+
+
+  /// put body JSON
+  static Future putJson(String url, [Map<String, dynamic>? data]) async {
+    // set validateStatus option so doesn't throw on status 400 or 500
+    Response response = await dio.put(url, data: data, options: Options(validateStatus: (_)=>true));
+    return response;
   }
 
   ///下载文件
@@ -114,6 +133,6 @@ class XHttp {
     } on DioException catch (e) {
       handleError(e);
     }
-    return response.data;
+    return response; //.data;
   }
 }

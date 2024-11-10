@@ -14,12 +14,12 @@ dependencies:
     sdk: flutter
 
   cached_network_image: 3.3.1
-  cookie_jar: 3.0.1
+  cookie_jar: 4.0.8
   cupertino_icons: 1.0.2
   date_format: 2.0.2
   devicelocale: 0.8.1
-  dio: ^5.3.2
-  dio_cookie_manager: ^2.1.4
+  dio: ^5.7.0
+  dio_cookie_manager: ^3.1.1
   extended_image: 8.1.2
   event_bus: 2.0.0
   flutter_easyrefresh: any
@@ -43,6 +43,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   i18n_json: ^1.0.0
+  change_app_package_name: ^1.4.0
 
 # 字体、图标、图片等资源加载
 flutter:

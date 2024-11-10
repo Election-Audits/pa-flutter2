@@ -3,11 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_template/core/utils/toast.dart';
 import 'package:flutter_template/core/utils/xuifont.dart';
 import 'package:flutter_template/generated/i18n.dart';
+import 'package:flutter_template/utils/provider.dart';
+
 import 'package:flutter_template/page/menu/about.dart';
 import 'package:flutter_template/page/menu/login.dart';
 import 'package:flutter_template/page/menu/settings.dart';
 import 'package:flutter_template/page/menu/sponsor.dart';
-import 'package:flutter_template/utils/provider.dart';
+import 'package:flutter_template/page/subagent/agent.dart';
+
 
 class MenuDrawer extends ConsumerWidget {
   const MenuDrawer({
@@ -75,31 +78,43 @@ class MenuDrawer extends ConsumerWidget {
                 ),
                 ListTile(
                   leading: Icon(Icons.list),
-                  title: Text(I18n.of(context)!.category),
+                  title: Text(I18n.of(context)!.subAgents),
                   onTap: () {
-                    ref.read(appStatusProvider.notifier).change(TAB_CATEGORY_INDEX);
-                    Navigator.pop(context);
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => AgentPage(),
+                    ));
                   },
-                  selected: status == TAB_CATEGORY_INDEX,
+                  selected: status == TAB_AGENTS_INDEX,
                 ),
                 ListTile(
                   leading: Icon(Icons.local_activity),
-                  title: Text(I18n.of(context)!.activity),
+                  title: Text(I18n.of(context)!.loginCodes),
                   onTap: () {
-                    ref.read(appStatusProvider.notifier).change(TAB_ACTIVITY_INDEX);
+                    ref.read(appStatusProvider.notifier).change(TAB_LOGIN_CODES_INDEX);
                     Navigator.pop(context);
                   },
-                  selected: status == TAB_ACTIVITY_INDEX,
+                  selected: status == TAB_LOGIN_CODES_INDEX,
+                ),
+                Divider(height: 1.0, color: Colors.grey),
+                ListTile(
+                  leading: Icon(Icons.notifications),
+                  title: Text(I18n.of(context)!.myElectAreas),
+                  onTap: () {
+                    ref.read(appStatusProvider.notifier).change(TAB_ELECT_AREAS_INDEX);
+                    Navigator.pop(context);
+                  },
+                  selected: status == TAB_ELECT_AREAS_INDEX,
                 ),
                 ListTile(
                   leading: Icon(Icons.notifications),
-                  title: Text(I18n.of(context)!.message),
+                  title: Text(I18n.of(context)!.uploadResults),
                   onTap: () {
-                    ref.read(appStatusProvider.notifier).change(TAB_MESSAGE_INDEX);
+                    ref.read(appStatusProvider.notifier).change(TAB_UPLOAD_RESULTS_INDEX);
                     Navigator.pop(context);
                   },
-                  selected: status == TAB_MESSAGE_INDEX,
+                  selected: status == TAB_UPLOAD_RESULTS_INDEX,
                 ),
+                Divider(height: 1.0, color: Colors.grey),
                 ListTile(
                   leading: Icon(Icons.person),
                   title: Text(I18n.of(context)!.profile),

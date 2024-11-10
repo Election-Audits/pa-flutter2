@@ -122,19 +122,19 @@ class _MainHomePageState extends ConsumerState<MainHomePage> {
               index: status,
               children: getTabWidget(context),
             ),
-            bottomNavigationBar: BottomNavigationBar(
-              items: tabs,
-              //高亮  被点击高亮
-              currentIndex: status,
-              //修改 页面
-              onTap: (index) {
-                // status.tabIndex = index;
-                ref.read(appStatusProvider.notifier).change(index);
+            // bottomNavigationBar: BottomNavigationBar(
+            //   items: tabs,
+            //   //高亮  被点击高亮
+            //   currentIndex: status,
+            //   //修改 页面
+            //   onTap: (index) {
+            //     // status.tabIndex = index;
+            //     ref.read(appStatusProvider.notifier).change(index);
                 
-              },
-              type: BottomNavigationBarType.fixed,
-              fixedColor: Theme.of(context).primaryColor,
-            ),
+            //   },
+            //   type: BottomNavigationBarType.fixed,
+            //   fixedColor: Theme.of(context).primaryColor,
+            // ),
           ),
           //监听导航栏返回,类似onKeyEvent
           onWillPop: () =>

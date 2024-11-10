@@ -77,7 +77,7 @@ class _AgentPageState extends ConsumerState<AgentPage> {
                       }
                     ));
                     // call function to query num agents
-                    //getSubAgentsQuery(); //await
+                    getSubAgentsQuery(); //await
                   },
                 ),
               isLoginCodeScreen ? SizedBox.shrink() 

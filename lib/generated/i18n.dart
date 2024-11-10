@@ -172,6 +172,8 @@ class I18n implements WidgetsLocalizations {
 	String get phoneHint => "0240001234";
 	/// "Previously added"
 	String get previouslyAdded => "Previously added";
+	/// "select ${electoralArea}"
+	String selectElectoralArea(String electoralArea) => "select ${electoralArea}";
 	/// "signed up"
 	String get signedUp => "signed up";
 	/// "Sorry, something went wrong. Try again later"

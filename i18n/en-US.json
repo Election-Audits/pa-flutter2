@@ -72,6 +72,7 @@
     "phoneError": "must enter phone number",
     "phoneHint": "0240001234",
     "previouslyAdded": "Previously added",
+    "selectElectoralArea": "select {electoralArea}",
     "signedUp": "signed up",
     "somethingWentWrong": "Sorry, something went wrong. Try again later",
     "subAgents": "Sub Agents",

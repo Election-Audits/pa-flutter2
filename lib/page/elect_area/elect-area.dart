@@ -27,6 +27,7 @@ class _ElectAreaPageState extends ConsumerState<ElectAreaPage> {
   @override
   void initState() {
     super.initState();
+    queryDone = getElectAreasQuery();
   }
 
   @override
@@ -89,7 +90,7 @@ class _ElectAreaPageState extends ConsumerState<ElectAreaPage> {
   }
 
 
-  Future getElectAreasQuery() async {
+  Future<String> getElectAreasQuery() async {
     debugPrint('getElectAreas query...');
     try {
       var response = await XHttp.get('/agent/electoral-areas');

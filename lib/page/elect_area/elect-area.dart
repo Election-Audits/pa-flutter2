@@ -21,6 +21,7 @@ class ElectAreaPage extends ConsumerStatefulWidget {
 class _ElectAreaPageState extends ConsumerState<ElectAreaPage> {
 
   List<Widget> electAreaWidgets = []; //myElectAreas;
+  int numElectAreas = 0;
   Future<String>? queryDone; // used in FutureBuilder
 
   @override
@@ -42,12 +43,12 @@ class _ElectAreaPageState extends ConsumerState<ElectAreaPage> {
             style: TextButton.styleFrom(
                 foregroundColor: Theme.of(context).primaryColor,
                 padding: EdgeInsets.all(15.0)),
-            child: Text(I18n.of(context)!.addSubAgents,
+            child: Text(I18n.of(context)!.addChangeElectArea,
                 style: TextStyle(color: Colors.white)),
             onPressed: () async { // navigate to screen for adding subagents
               await Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) {
-                  return ElectAreaFormPage();
+                  return ElectAreaFormPage(numElectAreasAdded: numElectAreas);
                 }
               ));
               // call function to query num agents
@@ -89,7 +90,45 @@ class _ElectAreaPageState extends ConsumerState<ElectAreaPage> {
 
 
   Future getElectAreasQuery() async {
+    debugPrint('getElectAreas query...');
+    try {
+      var response = await XHttp.get('/agent/electoral-areas');
+      int status = response.statusCode;
 
+      if (status == 200) {
+        // create widgets
+        var electAreas = response.data;
+        debugPrint('electoral areas: $electAreas');
+
+        List<Widget> tmpWidgets = [];
+        electAreas.forEach((electArea) {
+          tmpWidgets.add(
+            Column(children: [
+              Text(electArea.name)
+            ],)
+          );
+        });
+
+        // update widgets on screen
+        setState(() {
+          numElectAreas = electAreas.length;
+          electAreaWidgets = tmpWidgets;
+        });
+
+      } else if (status == 400) {
+        debugPrint('GET /agent/electoral-areas error: ${response?.data?.errMsg}');
+        ToastUtils.error(response.data?.errMsg);
+      } else {
+        debugPrint('GET /agent/electoral-areas error 500');
+        ToastUtils.error(I18n.of(context)!.somethingWentWrong);
+      }
+
+    } catch (exc) {
+      debugPrint("caught exc on getElectAreasQuery: $exc");
+      ToastUtils.error(I18n.of(context)!.somethingWentWrong);
+    }
+
+    return "done"; // ensure FutureBuilder has return data
   }
 
 

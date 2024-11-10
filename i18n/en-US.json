@@ -48,6 +48,8 @@
     "agreePrivacy": "Privacy agreement agreed!",
     "darkTheme": "Dark Theme",
 
+
+    "addChangeElectArea": "Add/Change electoral area",
     "addSubAgents": "Add Polling Agent",
     "email": "email",
     "emailError": "must enter email",
@@ -60,6 +62,7 @@
     "noAccountQuestion": "Don't have an account? ",
     "notSignedUp": "not signed up",
     "numberAgentsAdded": "{numAgents} polling agent(s) added",
+    "numberElectAreasAdded": "{numElectAreas} electoral area(s) added",
     "otherNames": "other names",
     "otherNamesOptional": "other names (optional)", 
     "otp": "One Time Passcode",

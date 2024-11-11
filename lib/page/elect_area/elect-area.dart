@@ -105,7 +105,8 @@ class _ElectAreaPageState extends ConsumerState<ElectAreaPage> {
         electAreas.forEach((electArea) {
           tmpWidgets.add(
             Column(children: [
-              Text(electArea.name)
+              Text(electArea['name']), // electArea.name
+              Divider()
             ],)
           );
         });

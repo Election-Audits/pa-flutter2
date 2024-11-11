@@ -7,4 +7,6 @@ class ElectoralArea {
   final String _id;
   // final String level;
   // final String parentLevelName;
+
+  String get id => this._id;
 }

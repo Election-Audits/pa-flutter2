@@ -50,36 +50,64 @@ class _ElectAreaFormPageState extends ConsumerState<ElectAreaFormPage> {
         title: Text(I18n.of(context)!.addChangeElectArea),
         //actions: <Widget>[],
       ),
-      body: Column(
-        children: [
-          Text( I18n.of(context)!.numberElectAreasAdded(numElectAreasAdded.toString()) ),
-          SizedBox(height: 10,),
-          Text(I18n.of(context)!.previouslyAdded),
-          Text(lastElectAreaAdded),
-          //
-          FutureBuilder(
-            future: optionsQueryDone, 
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return LoadingDialog(
-                  showContent: false,
-                  backgroundColor: Colors.black38,
-                  loadingView: SpinKitCircle(color: Colors.white),
-                );
-              } else if (snapshot.hasError) {
-                debugPrint('Futurebuilder error getting electoral area options');
-                return Text(I18n.of(context)!.somethingWentWrong);
-              }
-              
-              // return loaded data
-              return _dropDown(
-                underline: Container()
-              );
-            }
-          )
+      body: SizedBox.expand(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Text( I18n.of(context)!.numberElectAreasAdded(numElectAreasAdded.toString()) ),
+            SizedBox(height: 10,),
+            // Text(I18n.of(context)!.previouslyAdded),
+            // Text(lastElectAreaAdded),
+            //
+            Padding(
+              // key: _formKey, //设置globalKey，用于后面获取FormState
+              // autovalidateMode: AutovalidateMode.disabled,
+              padding: const EdgeInsets.symmetric(vertical: 40.0, horizontal: 24.0),
+              child: FutureBuilder(
+                future: optionsQueryDone, 
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return LoadingDialog(
+                      showContent: false,
+                      backgroundColor: Colors.black38,
+                      loadingView: SpinKitCircle(color: Colors.white),
+                    );
+                  } else if (snapshot.hasError) {
+                    debugPrint('Futurebuilder error getting electoral area options');
+                    return Text(I18n.of(context)!.somethingWentWrong);
+                  }
+                  
+                  // return loaded data
+                  return Column(
+                    children: [
+                      _dropDown( underline: Container() ),
+                      // Submit
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 24.0),
+                        child: ElevatedButton(
+                          style: TextButton.styleFrom(
+                            foregroundColor: Theme.of(context).primaryColor,
+                            padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 48.0)
+                          ),
+                          child: Text(I18n.of(context)!.submit,
+                            style: TextStyle(color: Colors.white)),
+                          onPressed: () {
+                            setElectoralAreaQuery(context);
+                          },
+                        )
+                      )
+                    ],
+                  );
+                  
+                }
+              )
+            )
+            
 
-        ]
+          ]
+        )
       )
+      
     );
   }
 
@@ -120,16 +148,19 @@ class _ElectAreaFormPageState extends ConsumerState<ElectAreaFormPage> {
       if (status == 200) {
         // update select options
         var electAreas = response.data;
+        debugPrint('elect areas: $electAreas');
+        List<DropdownMenuItem<ElectoralArea>> tmpElectAreas = [];
+
         for (var electArea in electAreas) {
-          var electAreaInst = new ElectoralArea(electArea.name, electArea._id);
-          _electAreaChoices.add( new DropdownMenuItem(
+          var electAreaInst = new ElectoralArea(electArea['name'], electArea['_id']);
+          tmpElectAreas.add( new DropdownMenuItem(
             value: electAreaInst,
             child: Text(electAreaInst.name)) 
           );
         }
 
         setState(() {
-          _electAreaChoices = _electAreaChoices; // cause update
+          _electAreaChoices = tmpElectAreas; // cause update
         });
 
       } else if (status == 400) {
@@ -148,6 +179,56 @@ class _ElectAreaFormPageState extends ConsumerState<ElectAreaFormPage> {
 
 
     return "done"; // ensure FutureBuilder has return data
+  }
+
+
+  ///
+  Future setElectoralAreaQuery(BuildContext context) async {
+    debugPrint('set electoral area query...');
+
+    // show loading dialog/spinner
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return LoadingDialog(
+          showContent: false,
+          backgroundColor: Colors.black38,
+          loadingView: SpinKitCircle(color: Colors.white),
+        );
+      }
+    );
+
+    if (_selectedElectArea == null) {
+      debugPrint('need to select an electoral area before submitting');
+      return;
+    }
+
+    // get data to be sent
+    var dataSend = {
+      "electoralAreaId": _selectedElectArea!.id
+    };
+
+    try {
+      var response = await XHttp.putJson('/agent/electoral-area', dataSend);
+      Navigator.of(context).pop(); // pop loading dialog/spinner
+      int status = response.statusCode;
+      debugPrint('POST electoral area response: $status');
+
+      if (status == 200) {
+        ToastUtils.success(I18n.of(context)!.requestSuccess);
+      } else if (status==400) {
+        debugPrint('POST electoral area error: ${response?.data?.errMsg}');
+        ToastUtils.error(response.data?.errMsg);
+      } else {
+        debugPrint('POST electoral area error 500');
+        ToastUtils.error(I18n.of(context)!.somethingWentWrong);
+      }
+
+    } catch (exc) {
+      debugPrint('setElectoralAreaQuery function caught exc: $exc');
+      ToastUtils.error(I18n.of(context)!.somethingWentWrong);
+    }
   }
 
 }

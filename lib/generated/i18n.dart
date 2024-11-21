@@ -126,6 +126,8 @@ class I18n implements WidgetsLocalizations {
 	String get agreePrivacy => "Privacy agreement agreed!";
 	/// "Dark Theme"
 	String get darkTheme => "Dark Theme";
+	/// "Add/Change electoral area"
+	String get addChangeElectArea => "Add/Change electoral area";
 	/// "Add Polling Agent"
 	String get addSubAgents => "Add Polling Agent";
 	/// "email"
@@ -150,6 +152,8 @@ class I18n implements WidgetsLocalizations {
 	String get notSignedUp => "not signed up";
 	/// "${numAgents} polling agent(s) added"
 	String numberAgentsAdded(String numAgents) => "${numAgents} polling agent(s) added";
+	/// "${numElectAreas} electoral area(s) added"
+	String numberElectAreasAdded(String numElectAreas) => "${numElectAreas} electoral area(s) added";
 	/// "other names"
 	String get otherNames => "other names";
 	/// "other names (optional)"
@@ -168,6 +172,10 @@ class I18n implements WidgetsLocalizations {
 	String get phoneHint => "0240001234";
 	/// "Previously added"
 	String get previouslyAdded => "Previously added";
+	/// "Request successful"
+	String get requestSuccess => "Request successful";
+	/// "select ${electoralArea}"
+	String selectElectoralArea(String electoralArea) => "select ${electoralArea}";
 	/// "signed up"
 	String get signedUp => "signed up";
 	/// "Sorry, something went wrong. Try again later"

@@ -1,3 +1,12 @@
+// plugins {
+//   //id 'org.electaudits.pollagent'
+
+//   // Add the Google services Gradle plugin
+//   id 'com.google.gms.google-services'
+//   ///id 'com.google.firebase' // :firebase-messaging
+// }
+
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -69,4 +78,9 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // // Import the Firebase BOM
+    // implementation platform('com.google.firebase:firebase-bom:33.6.0')
+    // // TODO: Add the dependencies for Firebase products you want to use
+    // //implementation platform('com.google.firebase:firebase-messaging:24.1.0')
 }

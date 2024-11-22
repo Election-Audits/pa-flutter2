@@ -12,6 +12,7 @@ import 'package:flutter_template/utils/provider.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter_template/page/details-form.dart';
 import 'package:flutter_template/utils/sputils.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 
 
 
@@ -144,7 +145,12 @@ class _OtpPageState extends ConsumerState<OtpPage> {
     debugPrint('onSubmit otp. isLogin: $isLogin');
     var url = isLogin ? '/login/confirm' : '/signup/confirm';
 
-    var dataSend = {"code": _otpController.text.trim()};
+    String? fbToken = "TODO"; //await FirebaseMessaging.instance.getToken(); // get firebase token
+
+    var dataSend = {
+      "code": _otpController.text.trim(),
+      "fbToken": fbToken
+    };
     if (email.isNotEmpty) dataSend["email"] = email;
     if (phone.isNotEmpty) dataSend["phone"] = phone;
 

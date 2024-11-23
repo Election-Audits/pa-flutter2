@@ -1,5 +1,7 @@
 // view pictures of PSRDs, button to take more pics
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -7,6 +9,7 @@ import 'package:flutter_template/core/widget/loading_dialog.dart';
 import 'package:flutter_template/generated/i18n.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_template/page/results/take-picture.dart';
+import 'package:flutter_template/core/utils/path.dart';
 
 
 
@@ -62,10 +65,17 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
     // Get a specific camera from the list of available cameras.
     final firstCamera = cameras.first;
 
+    // create directory
+    var appDocDir = await PathUtils.getDocumentsDirPath();
+    var pictureDir = '$appDocDir/pictures/${DateTime.now().millisecondsSinceEpoch}';
+    debugPrint('pictureDir: $pictureDir');
+    //var exists = await Directory('pictures/$pictureDir');
+    await Directory(pictureDir).create(recursive: true);
+
     // go to camera screen
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) {
-        return TakePictureScreen(camera: firstCamera);
+        return TakePictureScreen(camera: firstCamera, pictureDir: pictureDir);
       }
     ));
   }

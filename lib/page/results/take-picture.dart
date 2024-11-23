@@ -9,17 +9,22 @@ class TakePictureScreen extends StatefulWidget {
   const TakePictureScreen({
     super.key,
     required this.camera,
+    required this.pictureDir
   });
 
   final CameraDescription camera;
+  final String pictureDir;
 
   @override
-  TakePictureScreenState createState() => TakePictureScreenState();
+  TakePictureScreenState createState() => TakePictureScreenState(pictureDir);
 }
 
 class TakePictureScreenState extends State<TakePictureScreen> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
+  final String _pictureDir;
+
+  TakePictureScreenState(this._pictureDir) : super();
 
   @override
   void initState() {
@@ -47,7 +52,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Take a picture')),
+      appBar: AppBar(title: const Text('Take a picture')), // TODO: translations for text elements
       // You must wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner until the
       // controller has finished initializing.
@@ -85,6 +90,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                   // Pass the automatically generated path to
                   // the DisplayPictureScreen widget.
                   imagePath: image.path,
+                  pictureDir: _pictureDir,
                 ),
               ),
             );
@@ -102,16 +108,48 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 // A widget that displays the picture taken by the user.
 class DisplayPictureScreen extends StatelessWidget {
   final String imagePath;
+  final String pictureDir;
 
-  const DisplayPictureScreen({super.key, required this.imagePath});
+  const DisplayPictureScreen({super.key, required this.imagePath, required this.pictureDir});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Display the Picture')),
+      appBar: AppBar(),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
-      body: Image.file(File(imagePath)),
+      body: Flex(
+        direction: Axis.vertical,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+            TextButton.icon(
+              iconAlignment: IconAlignment.end,
+              label: Text('cancel', style: TextStyle(color: Colors.red),),
+              onPressed: () {
+                Navigator.of(context).pop(); // go back to picture taking screen
+              }, 
+              icon: Icon(Icons.cancel, color: Colors.red)
+            ),
+            //
+            TextButton.icon(
+              iconAlignment: IconAlignment.start,
+              label: Text('continue', style: TextStyle(color: Colors.green),),
+              onPressed: ()async { // pop twice to go to pictures screen
+                // move file to the right folder, and rename
+                var file = File(imagePath);
+                var fileParts = imagePath.split('.');
+                var ext = fileParts[fileParts.length-1];
+                await file.copy('$pictureDir/${DateTime.now().millisecondsSinceEpoch}.$ext');
+                Navigator.of(context)..pop()..pop();
+              }, 
+              icon: Icon(Icons.check, color: Colors.green)
+            ),
+          ]),
+          Image.file(File(imagePath)),
+        ]),
     );
   }
 }

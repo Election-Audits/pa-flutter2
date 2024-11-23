@@ -35,7 +35,7 @@ class _ResultPageState extends ConsumerState<ResultPage> {
   void initState() {
     super.initState();
     // get the subAgents
-    pendingQueryDone = getSubAgentsQuery();
+    //pendingQueryDone = getSubAgentsQuery(); TODO
 
   }
 
@@ -69,7 +69,7 @@ class _ResultPageState extends ConsumerState<ResultPage> {
                     }
                   ));
                   // call function to query num agents
-                  getSubAgentsQuery(); //await
+                  //getSubAgentsQuery(); //await
                 },
               ),
               // Text(I18n.of(context)!.numberAgentsAdded(numResultsSubmitted.toString())),
@@ -110,66 +110,5 @@ class _ResultPageState extends ConsumerState<ResultPage> {
     );
   }
 
-
-  /// get subAgents on init
-  Future<String> getSubAgentsQuery() async {
-    debugPrint('getSubAgentsQuery..');
-
-    try {
-      var response = await XHttp.get('/subagents');
-
-      ///Navigator.of(context).pop(); // pop loading dialog/spinner
-      int status = response.statusCode;
-
-      if (status == 200) {
-        // update agentWidgets
-        var subAgents = response.data;
-        debugPrint('sub agents: $subAgents');
-
-        List<Widget> tmpWidgets = [];
-
-        subAgents.forEach((agent){
-          debugPrint('agent: $agent');
-          var name = '';
-          if (agent.containsKey('otherNames')) name += agent['otherNames'];
-          if (agent.containsKey('surname')) name += ' ${agent['surname']}';
-          // check if user completed signup
-          bool emailConfirmed = agent.containsKey('emailConfirmed') && agent.emailConfirmed;
-          bool phoneConfirmed = agent.containsKey('phoneConfirmed') && agent.phoneConfirmed;
-          bool hasSignedUp = emailConfirmed || phoneConfirmed;
-
-          tmpWidgets.add(
-            Column(children: [ // return
-              name.isNotEmpty ? Text(name) : SizedBox.shrink(),
-              agent.containsKey('email') ? Text(agent['email']) : SizedBox.shrink(),
-              agent.containsKey('phone') ? Text(agent['phone']) : SizedBox.shrink(),
-              hasSignedUp ? Text(I18n.of(context)!.signedUp, style: TextStyle(color: Colors.green),) 
-              : Text(I18n.of(context)!.notSignedUp, style: TextStyle(color: Colors.red)),
-              Divider()
-              ],
-            )
-          );
-        });
-
-        setState(() {
-          numResultsSubmitted = subAgents.length;
-          pendingWidgets = tmpWidgets;
-        });
-
-      } else if (status == 400) {
-        debugPrint('GET /subagents error: ${response?.data?.errMsg}');
-        ToastUtils.error(response.data?.errMsg);
-      } else {
-        debugPrint('GET /subagents error 500');
-        ToastUtils.error(I18n.of(context)!.somethingWentWrong);
-      }
-
-    } catch (exc) {
-      debugPrint("caught exc on getSubAgentsQuery: $exc");
-      ToastUtils.error(I18n.of(context)!.somethingWentWrong);
-    }
-
-    return "done"; // ensure FutureBuilder has return data
-  }
 
 }

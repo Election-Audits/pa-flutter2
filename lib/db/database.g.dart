@@ -148,6 +148,17 @@ class _$ResultDao extends ResultDao {
   }
 
   @override
+  Future<List<Result>> findResults() async {
+    return _queryAdapter.queryList('Select * FROM Result',
+        mapper: (Map<String, Object?> row) => Result(
+            row['id'] as int,
+            row['electoralAreaId'] as String,
+            row['electionId'] as String,
+            row['picsFolder'] as String,
+            row['status'] as String));
+  }
+
+  @override
   Future<void> insertResult(Result result) async {
     await _resultInsertionAdapter.insert(result, OnConflictStrategy.abort);
   }

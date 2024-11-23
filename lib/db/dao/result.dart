@@ -15,6 +15,10 @@ abstract class ResultDao {
   @Query('Select * FROM Result WHERE status = :status')
   Future<List<Result>> findResultsByStatus(String status);
 
+  /// Select all (for testing)
+  @Query('Select * FROM Result')
+  Future<List<Result>> findResults();
+
   // TODO: update a result
 
 }

@@ -51,6 +51,8 @@
 
     "addChangeElectArea": "Add/Change electoral area",
     "addSubAgents": "Add Polling Agent",
+    "completed": "Completed",
+    "createdTime": "created at {date}",
     "email": "email",
     "emailError": "must enter email",
     "emailHint": "email@example.com",
@@ -68,6 +70,8 @@
     "otp": "One Time Passcode",
     "otpError": "must enter one time passcode",
     "passwordsNotEqual": "passwords must be equal",
+    "pending": "Pending",
+    "pictures": "Pictures",
     "phone": "phone",
     "phoneError": "must enter phone number",
     "phoneHint": "0240001234",
@@ -80,5 +84,6 @@
     "submit": "Submit",
     "surname": "surname",
     "surnameOptional": "surname (optional)",
+    "takePictures": "Take pictures of pink sheet",
     "uploadResults": "Upload Results"
 }

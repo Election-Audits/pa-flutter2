@@ -1,22 +1,30 @@
 // Results entity
 import 'package:floor/floor.dart';
 
-
+// election Results
 @entity
 class Result {
-  @primaryKey
-  final int id;
+  @PrimaryKey(autoGenerate: true)
+  final int? id;
 
-  final String electoralAreaId;
+  final String stationId;
+  final String stationName;
   final String electionId;
-  final String picsFolder; // folder containing pictures
+  final String electionType; // presidential, parliamentary
+  final int unixTime; // also used to name the folder containing the pictures
   String status; // pending or completed
   String? serverResultId; // resultId from server database
-  // Summary? summary; TODO: create tables for Summary and ResultItem and use foreign key
-  // List<ResultItem>? results;
+  String? summaryId; // reference to Summary table
+  String? resultItemId; // reference to ResultItem table
 
+  Result(this.id, this.stationId, this.stationName, this.electionId, this.electionType, this.unixTime, this.status);
 
-  Result(this.id, this.electoralAreaId, this.electionId, this.picsFolder, this.status);
+  // TODO: indexes: status, unixTime?
+
+  @override
+  String toString() {
+    return 'Result {id: $id, electoralAreaId: $stationId}, status: $status, electionType ... ';
+  }
 }
 
 

@@ -130,6 +130,10 @@ class I18n implements WidgetsLocalizations {
 	String get addChangeElectArea => "Add/Change electoral area";
 	/// "Add Polling Agent"
 	String get addSubAgents => "Add Polling Agent";
+	/// "Completed"
+	String get completed => "Completed";
+	/// "created at ${date}"
+	String createdTime(String date) => "created at ${date}";
 	/// "email"
 	String get email => "email";
 	/// "must enter email"
@@ -164,6 +168,10 @@ class I18n implements WidgetsLocalizations {
 	String get otpError => "must enter one time passcode";
 	/// "passwords must be equal"
 	String get passwordsNotEqual => "passwords must be equal";
+	/// "Pending"
+	String get pending => "Pending";
+	/// "Pictures"
+	String get pictures => "Pictures";
 	/// "phone"
 	String get phone => "phone";
 	/// "must enter phone number"
@@ -188,6 +196,8 @@ class I18n implements WidgetsLocalizations {
 	String get surname => "surname";
 	/// "surname (optional)"
 	String get surnameOptional => "surname (optional)";
+	/// "Take pictures of pink sheet"
+	String get takePictures => "Take pictures of pink sheet";
 	/// "Upload Results"
 	String get uploadResults => "Upload Results";
   

@@ -28,24 +28,12 @@ class DefaultApp {
     await LocaleUtils.init();
 
     // db init
-    //final database = await $FloorAppDatabase.databaseBuilder('app_db.db').build();
-
-    // test persistence across screen reopens. App restarts
-    // final resultDao = database.resultDao;
-    // var results = await resultDao.findResults();
-    // debugPrint('db results on init: ${results[0].electionId}');
-
-    // write data for next test
-    // final result = Result(1, 'area_1', 'election_1', 'pics_folder', 'pending');
-    // await resultDao.insertResult(result);
-
-    ///////
-    // db init
     final mydb = MyDatabase();
     await mydb.initDb();
     final resultDao = mydb.db.resultDao;
     var results = await resultDao.findResults();
-    debugPrint('db results on init 2: ${results[0].electionId}');
+    debugPrint('db results: $results');
+    //debugPrint('db results on init 2: ${results[0]?.electionId}');
   }
 
   /// 程序初始化操作

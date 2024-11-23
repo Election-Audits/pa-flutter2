@@ -96,7 +96,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Result` (`id` INTEGER NOT NULL, `electoralAreaId` TEXT NOT NULL, `electionId` TEXT NOT NULL, `picsFolder` TEXT NOT NULL, `status` TEXT NOT NULL, `serverResultId` TEXT, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Result` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `stationId` TEXT NOT NULL, `stationName` TEXT NOT NULL, `electionId` TEXT NOT NULL, `electionType` TEXT NOT NULL, `unixTime` INTEGER NOT NULL, `status` TEXT NOT NULL, `serverResultId` TEXT, `summaryId` TEXT, `resultItemId` TEXT)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -120,11 +120,15 @@ class _$ResultDao extends ResultDao {
             'Result',
             (Result item) => <String, Object?>{
                   'id': item.id,
-                  'electoralAreaId': item.electoralAreaId,
+                  'stationId': item.stationId,
+                  'stationName': item.stationName,
                   'electionId': item.electionId,
-                  'picsFolder': item.picsFolder,
+                  'electionType': item.electionType,
+                  'unixTime': item.unixTime,
                   'status': item.status,
-                  'serverResultId': item.serverResultId
+                  'serverResultId': item.serverResultId,
+                  'summaryId': item.summaryId,
+                  'resultItemId': item.resultItemId
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -139,10 +143,12 @@ class _$ResultDao extends ResultDao {
   Future<List<Result>> findResultsByStatus(String status) async {
     return _queryAdapter.queryList('Select * FROM Result WHERE status = ?1',
         mapper: (Map<String, Object?> row) => Result(
-            row['id'] as int,
-            row['electoralAreaId'] as String,
+            row['id'] as int?,
+            row['stationId'] as String,
+            row['stationName'] as String,
             row['electionId'] as String,
-            row['picsFolder'] as String,
+            row['electionType'] as String,
+            row['unixTime'] as int,
             row['status'] as String),
         arguments: [status]);
   }
@@ -151,10 +157,12 @@ class _$ResultDao extends ResultDao {
   Future<List<Result>> findResults() async {
     return _queryAdapter.queryList('Select * FROM Result',
         mapper: (Map<String, Object?> row) => Result(
-            row['id'] as int,
-            row['electoralAreaId'] as String,
+            row['id'] as int?,
+            row['stationId'] as String,
+            row['stationName'] as String,
             row['electionId'] as String,
-            row['picsFolder'] as String,
+            row['electionType'] as String,
+            row['unixTime'] as int,
             row['status'] as String));
   }
 

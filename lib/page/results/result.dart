@@ -11,6 +11,8 @@ import 'package:flutter_template/generated/i18n.dart';
 // import 'package:flutter_template/utils/provider.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter_template/page/subagent/agent-form.dart';
+import 'package:flutter_template/page/results/pictures.dart';
+import 'package:flutter_template/controller/result.dart';
 
 
 
@@ -25,18 +27,21 @@ class _ResultPageState extends ConsumerState<ResultPage> {
   FocusNode blankNode = FocusNode();
 
   List<Widget> pendingWidgets = [];
+  List<Widget> completedWidgets = [];
   int numResultsSubmitted = 0;
 
   Future<String>? pendingQueryDone;
   Future<String>? completedQueryDone;
+
+  var resultController = ResultController(); // query functions
 
 
   @override
   void initState() {
     super.initState();
     // get the subAgents
-    //pendingQueryDone = getSubAgentsQuery(); TODO
-
+    pendingQueryDone = getResultsQuery('pending');
+    completedQueryDone = getResultsQuery('completed');
   }
 
   //@override void didChangeDependencies ()
@@ -65,15 +70,16 @@ class _ResultPageState extends ConsumerState<ResultPage> {
                 onPressed: () async { // navigate to screen for adding subagents
                   await Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) {
-                      return AgentFormPage(numAgentsAdded: numResultsSubmitted,); //TODO
+                      return PicturesPage();
                     }
                   ));
                   // call function to query num agents
                   //getSubAgentsQuery(); //await
                 },
               ),
-              // Text(I18n.of(context)!.numberAgentsAdded(numResultsSubmitted.toString())),
-              // Divider(),
+              // Pending Results to resubmit
+              Text(I18n.of(context)!.pending),
+              Divider(),
               FutureBuilder(
                 future: pendingQueryDone, 
                 builder: (context,snapshot) {
@@ -103,11 +109,73 @@ class _ResultPageState extends ConsumerState<ResultPage> {
                   );
                 }
               ),
-                ]
+              SizedBox(height: 20,),
+              // Completed Results to submit
+              Text(I18n.of(context)!.completed),
+              Divider(),
+              FutureBuilder(
+                future: completedQueryDone, 
+                builder: (context,snapshot) {
+                  // If your data is not loading show loader
+                  if (!snapshot.hasData) {
+                    return LoadingDialog(
+                      showContent: false,
+                      backgroundColor: Colors.black38,
+                      loadingView: SpinKitCircle(color: Colors.white),
+                    );
+                  // If your data is not loading show loader
+                  } else if (snapshot.hasError) {
+                    debugPrint('Futurebuilder error getting completed submissions'); // TODO: Toast
+                    return Text(I18n.of(context)!.somethingWentWrong);
+                  }
+                  // return loaded data
+                  return Expanded(
+                    child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      //itemExtent: 100,
+                      shrinkWrap: true,
+                      itemCount: completedWidgets.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return completedWidgets[index];
+                      }
+                    )
+                  );
+                }
               ),
+            ]
+          ),
         )
         
     );
+  }
+
+
+  //
+  Future<String> getResultsQuery(String status) async {
+    var results = await resultController.getResults(status);
+    // build widgets
+    List<Widget> widgets = [];
+    results.forEach((result) {
+      DateTime createTime = DateTime.fromMillisecondsSinceEpoch(result.unixTime);
+
+      widgets.add(
+        Column(children: [
+          Text(result.electionType),
+          Text(result.stationName),
+          Text(I18n.of(context)!.createdTime(createTime.toString())),
+          // TODO: add view button to launch if pending/complete
+          Divider()
+        ],)
+      );
+    });
+
+    // assign right widgets
+    //setState(() { // when returning after an upload, will call function
+      if (status == 'pending') pendingWidgets = widgets;
+      else completedWidgets = widgets;
+    //});
+
+    return 'done'; // signal FutureBuilder to update widgets
   }
 
 

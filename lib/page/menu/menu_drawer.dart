@@ -11,6 +11,7 @@ import 'package:flutter_template/page/menu/settings.dart';
 import 'package:flutter_template/page/menu/sponsor.dart';
 import 'package:flutter_template/page/subagent/agent.dart';
 import 'package:flutter_template/page/elect_area/elect-area.dart';
+import 'package:flutter_template/page/results/result.dart';
 
 
 class MenuDrawer extends ConsumerWidget {
@@ -111,8 +112,9 @@ class MenuDrawer extends ConsumerWidget {
                   leading: Icon(Icons.notifications),
                   title: Text(I18n.of(context)!.uploadResults),
                   onTap: () {
-                    ref.read(appStatusProvider.notifier).change(TAB_UPLOAD_RESULTS_INDEX);
-                    Navigator.pop(context);
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ResultPage(),
+                    ));
                   },
                   selected: status == TAB_UPLOAD_RESULTS_INDEX,
                 ),

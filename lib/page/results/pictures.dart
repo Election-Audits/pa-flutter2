@@ -1,10 +1,12 @@
-// take pictures of documents
+// view pictures of PSRDs, button to take more pics
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_template/core/widget/loading_dialog.dart';
 import 'package:flutter_template/generated/i18n.dart';
+import 'package:camera/camera.dart';
+import 'package:flutter_template/page/results/take-picture.dart';
 
 
 
@@ -36,7 +38,7 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
             child: IconButton(
               iconSize: 150,
               onPressed: () {
-                // launch camera page
+                handleCameraPress(context); // launch camera page
               }, 
               icon: const Icon(Icons.photo_camera) 
             )
@@ -50,6 +52,22 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
       )
         
     );
+  }
+
+
+  // handle camera press
+  Future<void> handleCameraPress(BuildContext context) async {
+    // Obtain a list of the available cameras on the device.
+    final cameras = await availableCameras();
+    // Get a specific camera from the list of available cameras.
+    final firstCamera = cameras.first;
+
+    // go to camera screen
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) {
+        return TakePictureScreen(camera: firstCamera);
+      }
+    ));
   }
 
 }

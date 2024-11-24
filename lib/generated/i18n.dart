@@ -186,6 +186,8 @@ class I18n implements WidgetsLocalizations {
 	String get selectElection => "Select election";
 	/// "select ${electoralArea}"
 	String selectElectoralArea(String electoralArea) => "select ${electoralArea}";
+	/// "select a polling station and election type"
+	String get selectStationElection => "select a polling station and election type";
 	/// "signed up"
 	String get signedUp => "signed up";
 	/// "Sorry, something went wrong. Try again later"

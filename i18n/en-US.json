@@ -79,6 +79,7 @@
     "requestSuccess": "Request successful",
     "selectElection": "Select election",
     "selectElectoralArea": "select {electoralArea}",
+    "selectStationElection": "select a polling station and election type",
     "signedUp": "signed up",
     "somethingWentWrong": "Sorry, something went wrong. Try again later",
     "subAgents": "Sub Agents",

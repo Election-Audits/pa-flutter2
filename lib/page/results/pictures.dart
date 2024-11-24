@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_template/core/utils/toast.dart';
 import 'package:flutter_template/core/widget/loading_dialog.dart';
 import 'package:flutter_template/generated/i18n.dart';
 import 'package:camera/camera.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_template/page/results/take-picture.dart';
 import 'package:flutter_template/core/utils/path.dart';
 import 'package:flutter_template/utils/ea-utils.dart';
 import 'package:flutter_template/controller/result.dart';
+import 'package:flutter_template/utils/sputils.dart';
 
 
 
@@ -27,6 +29,7 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
   @override
   void initState() {
     super.initState();
+    readPictureDir();
     stationsQueryDone = getPollingStations();
   }
 
@@ -44,6 +47,10 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
   // election dropdown
   Election? _selectedElection;
   List<DropdownMenuItem<Election>> _electionChoices = [];
+
+  String? pictureDir; // directory where pictures of PSRDs are kept
+  // list of images of PSRDs
+  List<String> picturePaths = [];
 
 
   @override
@@ -77,28 +84,6 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
             }
           ),
           // selector for election
-          // FutureBuilder(
-          //   future: electionsQueryDone, 
-          //   builder: (context, snapshot) {
-          //     if (!snapshot.hasData) {
-          //       return LoadingDialog(
-          //         showContent: false,
-          //         backgroundColor: Colors.black38,
-          //         loadingView: SpinKitCircle(color: Colors.white),
-          //       );
-          //     } else if (snapshot.hasError) {
-          //       debugPrint('Futurebuilder error getting electoral area options');
-          //       return Text(I18n.of(context)!.somethingWentWrong);
-          //     }
-          //     // return loaded data
-          //     return Column(
-          //       children: [
-          //         _electionDropdown( underline: Container() ),
-          //       ],
-          //     );
-          //   }
-          // ),
-
           (_electionDropdownState == electionDropdownStates.hidden) ? SizedBox.shrink() 
           : (_electionDropdownState == electionDropdownStates.pending) ? LoadingDialog(showContent: false,
             backgroundColor: Colors.black38, loadingView: SpinKitCircle(color: Colors.white))
@@ -106,22 +91,29 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
             children: [_electionDropdown( underline: Container() )]
           ),
 
-          // TODO: Carousel View
+          // Carousel View for pictures
+          (picturePaths.length == 0) ? SizedBox.shrink() :
+          ConstrainedBox( constraints: const BoxConstraints(maxHeight: 200),
+            child: CarouselView(itemExtent: 330, 
+              children: List.generate(picturePaths.length, (index) => 
+                Image.asset(picturePaths[index], fit: BoxFit.cover)
+              )
+            )
+          ),
+
+          //
+          Padding(padding: EdgeInsets.symmetric(vertical: 10), child: Divider(),),
           Text(I18n.of(context)!.takePictures),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
             child: IconButton(
               iconSize: 150,
-              onPressed: () {
-                handleCameraPress(context); // launch camera page
+              onPressed: ()async {
+                await handleCameraPress(context); // launch camera page
+                readPictureDir();
               }, 
               icon: const Icon(Icons.photo_camera) 
             )
-            // ElevatedButton(
-            //   child: ImageIcon(image) //Icon(Icons.photo_camera),
-            //   onPressed: () {
-            //   },
-            // )
           )
         ])
       )
@@ -137,17 +129,29 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
     // Get a specific camera from the list of available cameras.
     final firstCamera = cameras.first;
 
-    // create directory
+    // set name of picture directory
     var appDocDir = await PathUtils.getDocumentsDirPath();
-    var pictureDir = '$appDocDir/pictures/${DateTime.now().millisecondsSinceEpoch}';
+    pictureDir = '$appDocDir/pictures/${DateTime.now().millisecondsSinceEpoch}';
     debugPrint('pictureDir: $pictureDir');
-    //var exists = await Directory('pictures/$pictureDir');
-    await Directory(pictureDir).create(recursive: true);
+
+    // save current polling station and election to shared prefs
+    var spf = await SPUtils.init();
+    try {
+      await spf!.setString('stationId', _selectedStation!.id);
+      await spf.setString('electionId', _selectedElection!.id);
+      await spf.setString('pictureDir', pictureDir!);
+    } catch (exc) {
+      ToastUtils.error(I18n.of(context)!.selectStationElection);
+      return;
+    }
+
+    // create directory
+    await Directory(pictureDir!).create(recursive: true);
 
     // go to camera screen
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) {
-        return TakePictureScreen(camera: firstCamera, pictureDir: pictureDir);
+        return TakePictureScreen(camera: firstCamera, pictureDir: pictureDir!);
       }
     ));
   }
@@ -227,6 +231,36 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
     setState((){
       _electionDropdownState = electionDropdownStates.shown;
       _electionChoices = elections;
+    });
+  }
+
+  // read directory containing pictures
+  Future<void> readPictureDir() async {
+    debugPrint('readPictureDir called...');
+    if (pictureDir == null) {
+      var spf = await SPUtils.init();
+      //try {
+        pictureDir = await spf?.getString('pictureDir');
+        debugPrint('pictureDir: $pictureDir');
+        if (pictureDir == null) return;
+      // } catch (exc) {
+      //   debugPrint('exception getting pictureDir from shared prefs: $exc');
+      //   return [];
+      // }
+    }
+
+    // read directory
+    final dir = Directory(pictureDir!);
+    final List<FileSystemEntity> entities = await dir.list().toList();
+    debugPrint('entities: $entities');
+    List<String> files = [];
+    for (var entity in entities) {
+      files.add(entity.path);
+    }
+    debugPrint('pictures: $files');
+
+    setState((){
+      picturePaths = files;
     });
   }
 

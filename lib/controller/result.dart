@@ -34,21 +34,25 @@ class ResultController {
 
 
   /// Query electoral areas/stations of agent
-  Future<List<ElectoralArea>?> getMyStations(BuildContext context) async {
+  Future<List<ElectoralArea>> getMyStations(BuildContext context) async {
     debugPrint("getMyStations query...");
-    List<ElectoralArea>? stationsRet;
+    List<ElectoralArea> stationsRet = [];
 
     try {
       var response = await XHttp.get('/agent/electoral-areas');
       int status = response.statusCode;
-      
+      debugPrint('status: $status');
 
-      if (status == 200) {
+      if (status == 200) { // TODO: status 401
         var stations = response.data;
-        stationsRet = stations.forEach((station){
-          var tmpStation = new ElectoralArea(station.name, station._id);
-          return tmpStation;
-        });
+        debugPrint('stations (controller): $stations');
+        //stationsRet = stations.forEach((station){
+        for (var station in stations) {
+          var tmpStation = new ElectoralArea(station['name'], station['_id']);
+          stationsRet.add(tmpStation);
+          //return tmpStation;
+        }
+        //});
 
       } else if (status == 400) {
         debugPrint('GET /agent/electoral-areas error: ${response?.data?.errMsg}');
@@ -67,20 +71,24 @@ class ResultController {
 
 
   /// Query available elections of a given polling station/ electoral area
-  Future<List<Election>?> getStationElections(BuildContext context, String stationId) async {
+  Future<List<Election>> getStationElections(BuildContext context, String stationId) async {
     debugPrint('getStationElections query...');
-    List<Election>? electionsRet;
+    List<Election> electionsRet = [];
 
     try {
       var response = await XHttp.get('/electoral-area/$stationId/parents/elections');
-      int status = response.statusCode;
+      int status = response.statusCode; debugPrint('status: $status');
 
       if (status == 200) {
         var elections = response.data;
-        electionsRet = elections.forEach((election) {
-          var tmpElection = new Election(election._id, election.type);
-          return tmpElection;
-        });
+        debugPrint('elections (controller): $elections');
+
+        for (var election in elections) {
+          var tmpElection = new Election(election['_id'], election['type']);
+          electionsRet.add(tmpElection);
+          //return tmpElection;
+        }
+        //});
 
       } else if (status == 400) {
         debugPrint('GET /electoral-area/$stationId/parents/elections error: ${response?.data?.errMsg}');

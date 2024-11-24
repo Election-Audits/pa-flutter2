@@ -27,11 +27,15 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
   @override
   void initState() {
     super.initState();
+    stationsQueryDone = getPollingStations();
   }
+
+  ResultController _resultController = ResultController(); // get functions
 
   // for future builders. Set when done with query for polling stations (electoral areas), elections done
   Future<String>? stationsQueryDone;
-  Future<String>? electionsQueryDone;
+  //Future<String>? electionsQueryDone;
+  var _electionDropdownState = electionDropdownStates.hidden;
 
   // polling station/electoral area dropdown
   ElectoralArea? _selectedStation;
@@ -66,65 +70,40 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
               // return loaded data
               return Column(
                 children: [
-                  _stationDropDown( underline: Container() ),
-                  // Submit
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 24.0),
-                  //   child: ElevatedButton(
-                  //     style: TextButton.styleFrom(
-                  //       foregroundColor: Theme.of(context).primaryColor,
-                  //       padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 48.0)
-                  //     ),
-                  //     child: Text(I18n.of(context)!.submit,
-                  //       style: TextStyle(color: Colors.white)),
-                  //     onPressed: () {
-                  //       setElectoralAreaQuery(context);
-                  //     },
-                  //   )
-                  // )
+                  _stationDropdown( underline: Container() ),
                 ],
               );
               
             }
           ),
           // selector for election
-          FutureBuilder(
-            future: electionsQueryDone, 
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return LoadingDialog(
-                  showContent: false,
-                  backgroundColor: Colors.black38,
-                  loadingView: SpinKitCircle(color: Colors.white),
-                );
-              } else if (snapshot.hasError) {
-                debugPrint('Futurebuilder error getting electoral area options');
-                return Text(I18n.of(context)!.somethingWentWrong);
-              }
-              
-              // return loaded data
-              return Column(
-                children: [
-                  _electionDropDown( underline: Container() ),
-                  // Submit
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 24.0),
-                  //   child: ElevatedButton(
-                  //     style: TextButton.styleFrom(
-                  //       foregroundColor: Theme.of(context).primaryColor,
-                  //       padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 48.0)
-                  //     ),
-                  //     child: Text(I18n.of(context)!.submit,
-                  //       style: TextStyle(color: Colors.white)),
-                  //     onPressed: () {
-                  //       setElectoralAreaQuery(context);
-                  //     },
-                  //   )
-                  // )
-                ],
-              );
-              
-            }
+          // FutureBuilder(
+          //   future: electionsQueryDone, 
+          //   builder: (context, snapshot) {
+          //     if (!snapshot.hasData) {
+          //       return LoadingDialog(
+          //         showContent: false,
+          //         backgroundColor: Colors.black38,
+          //         loadingView: SpinKitCircle(color: Colors.white),
+          //       );
+          //     } else if (snapshot.hasError) {
+          //       debugPrint('Futurebuilder error getting electoral area options');
+          //       return Text(I18n.of(context)!.somethingWentWrong);
+          //     }
+          //     // return loaded data
+          //     return Column(
+          //       children: [
+          //         _electionDropdown( underline: Container() ),
+          //       ],
+          //     );
+          //   }
+          // ),
+
+          (_electionDropdownState == electionDropdownStates.hidden) ? SizedBox.shrink() 
+          : (_electionDropdownState == electionDropdownStates.pending) ? LoadingDialog(showContent: false,
+            backgroundColor: Colors.black38, loadingView: SpinKitCircle(color: Colors.white))
+          : Column(
+            children: [_electionDropdown( underline: Container() )]
           ),
 
           // TODO: Carousel View
@@ -175,7 +154,7 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
 
 
   // dropdown with list of electoral areas. Populated after query
-  Widget _stationDropDown({Widget? underline, Widget? icon, TextStyle? style,
+  Widget _stationDropdown({Widget? underline, Widget? icon, TextStyle? style,
     TextStyle? hintStyle, Color? dropdownColor, Color? iconEnabledColor,
   }) => DropdownButton<ElectoralArea>(
     value: _selectedStation,
@@ -187,7 +166,9 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
     onChanged: (ElectoralArea? newValue) {
       setState(() {
         _selectedStation = newValue;
+        _electionDropdownState = electionDropdownStates.pending; // show pending dialog for elections dropdown
       });
+      getStationElections(); // get election types for this station
     },
     hint: Text( I18n.of(context)!.selectElectoralArea('electoral area') ),
     items: _stationChoices
@@ -195,7 +176,7 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
 
 
   // dropdown with list of elections
-  Widget _electionDropDown({Widget? underline, Widget? icon, TextStyle? style,
+  Widget _electionDropdown({Widget? underline, Widget? icon, TextStyle? style,
     TextStyle? hintStyle, Color? dropdownColor, Color? iconEnabledColor,
   }) => DropdownButton<Election>(
     value: _selectedElection,
@@ -213,4 +194,48 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
     items: _electionChoices
   );
 
+
+  Future<String> getPollingStations() async {
+    var stationsRet = await _resultController.getMyStations(context);
+    debugPrint('stationsRet pictures.dart: $stationsRet');
+    List<DropdownMenuItem<ElectoralArea>> stations = [];
+
+    for (var station in stationsRet) {
+      stations.add( new DropdownMenuItem(value: station, 
+        child: Text(station.name)
+      ));
+    }
+
+    setState((){
+      _stationChoices = stations;
+    });
+
+    return "done";
+  }
+
+
+  Future getStationElections() async {
+    var electionsRet = await _resultController.getStationElections(context, _selectedStation!.id);
+    List<DropdownMenuItem<Election>> elections = [];
+
+    for (var election in electionsRet) {
+      elections.add( new DropdownMenuItem(value: election,
+        child: Text(election.type))
+      );
+    }
+
+    setState((){
+      _electionDropdownState = electionDropdownStates.shown;
+      _electionChoices = elections;
+    });
+  }
+
+}
+
+
+// enum for election dropdown state
+enum electionDropdownStates {
+  hidden, // hide until polling station chosen
+  pending, // querying backend for elections
+  shown // display
 }

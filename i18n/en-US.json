@@ -77,6 +77,7 @@
     "phoneHint": "0240001234",
     "previouslyAdded": "Previously added",
     "requestSuccess": "Request successful",
+    "selectElection": "Select election",
     "selectElectoralArea": "select {electoralArea}",
     "signedUp": "signed up",
     "somethingWentWrong": "Sorry, something went wrong. Try again later",

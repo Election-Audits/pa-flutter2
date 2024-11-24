@@ -10,3 +10,13 @@ class ElectoralArea {
 
   String get id => this._id;
 }
+
+
+/// An election received from the server
+class Election {
+
+  const Election(this.id, this.type);
+  final String id;
+  //final String name;
+  final String type;
+}

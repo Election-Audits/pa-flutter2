@@ -182,6 +182,8 @@ class I18n implements WidgetsLocalizations {
 	String get previouslyAdded => "Previously added";
 	/// "Request successful"
 	String get requestSuccess => "Request successful";
+	/// "Select election"
+	String get selectElection => "Select election";
 	/// "select ${electoralArea}"
 	String selectElectoralArea(String electoralArea) => "select ${electoralArea}";
 	/// "signed up"

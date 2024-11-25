@@ -93,12 +93,19 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
 
           // Carousel View for pictures
           (picturePaths.length == 0) ? SizedBox.shrink() :
-          ConstrainedBox( constraints: const BoxConstraints(maxHeight: 200),
-            child: CarouselView(itemExtent: 330, 
-              children: List.generate(picturePaths.length, (index) => 
-                Image.asset(picturePaths[index], fit: BoxFit.cover)
-              )
-            )
+          //Expanded(
+          ConstrainedBox(constraints: const BoxConstraints(maxHeight: 200),
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              //itemExtent: 100,
+              shrinkWrap: true,
+              itemCount: picturePaths.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Padding(padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Image.file(File(picturePaths[index])) //Image.asset(picturePaths[index]);
+                );
+              }
+            ),
           ),
 
           //
@@ -108,9 +115,8 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
             child: IconButton(
               iconSize: 150,
-              onPressed: ()async {
-                await handleCameraPress(context); // launch camera page
-                readPictureDir();
+              onPressed: () {
+                handleCameraPress(context); // launch camera page
               }, 
               icon: const Icon(Icons.photo_camera) 
             )
@@ -129,18 +135,22 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
     // Get a specific camera from the list of available cameras.
     final firstCamera = cameras.first;
 
+    var spf = await SPUtils.init();
     // set name of picture directory
+    // first check if already in shared prefs
+    var pictureDir_0 = await spf!.getString('pictureDir');
     var appDocDir = await PathUtils.getDocumentsDirPath();
-    pictureDir = '$appDocDir/pictures/${DateTime.now().millisecondsSinceEpoch}';
+    pictureDir = (pictureDir_0 != null) ? pictureDir_0 : '$appDocDir/pictures/${DateTime.now().millisecondsSinceEpoch}';
     debugPrint('pictureDir: $pictureDir');
 
     // save current polling station and election to shared prefs
-    var spf = await SPUtils.init();
+    
     try {
-      await spf!.setString('stationId', _selectedStation!.id);
+      await spf.setString('stationId', _selectedStation!.id);
       await spf.setString('electionId', _selectedElection!.id);
       await spf.setString('pictureDir', pictureDir!);
     } catch (exc) {
+      debugPrint('cameraPress exc: $exc');
       ToastUtils.error(I18n.of(context)!.selectStationElection);
       return;
     }
@@ -149,11 +159,13 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
     await Directory(pictureDir!).create(recursive: true);
 
     // go to camera screen
-    Navigator.of(context).push(MaterialPageRoute(
+    await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) {
         return TakePictureScreen(camera: firstCamera, pictureDir: pictureDir!);
       }
     ));
+
+    await readPictureDir(); // add new pictures
   }
 
 
@@ -189,9 +201,14 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
     dropdownColor: dropdownColor,
     style: style,
     iconEnabledColor: iconEnabledColor, 
-    onChanged: (Election? newValue) {
+    onChanged: (Election? newValue) async {
+      // first remove pictureDir from shared prefs, election changed
+      var spf = await SPUtils.init();
+      await spf!.remove('pictureDir');
+      // update election widget
       setState(() {
         _selectedElection = newValue;
+        picturePaths = []; // remove pictures from list view
       });
     },
     hint: Text( I18n.of(context)!.selectElection ),
@@ -239,14 +256,9 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
     debugPrint('readPictureDir called...');
     if (pictureDir == null) {
       var spf = await SPUtils.init();
-      //try {
-        pictureDir = await spf?.getString('pictureDir');
-        debugPrint('pictureDir: $pictureDir');
-        if (pictureDir == null) return;
-      // } catch (exc) {
-      //   debugPrint('exception getting pictureDir from shared prefs: $exc');
-      //   return [];
-      // }
+      pictureDir = await spf?.getString('pictureDir');
+      debugPrint('pictureDir: $pictureDir');
+      if (pictureDir == null) return;
     }
 
     // read directory
@@ -258,6 +270,7 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
       files.add(entity.path);
     }
     debugPrint('pictures: $files');
+    debugPrint('number of pictures: ${files.length}');
 
     setState((){
       picturePaths = files;

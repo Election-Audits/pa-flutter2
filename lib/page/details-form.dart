@@ -153,10 +153,17 @@ class _DetailsFormPageState extends ConsumerState<DetailsFormPage> {
       }
     );
 
+    String surname = _surnameController.text.trim();
+    String otherNames = _otherNamesController.text.trim();
     Map<String,dynamic> dataSend = {};
-    if (_surnameController.text.isNotEmpty) dataSend['surname'] = _surnameController.text.trim();
-    if (_otherNamesController.text.isNotEmpty) dataSend['otherNames'] = _otherNamesController.text.trim();
+    if (_surnameController.text.isNotEmpty) dataSend['surname'] = surname;
+    if (_otherNamesController.text.isNotEmpty) dataSend['otherNames'] = otherNames;
     debugPrint('data to send: $dataSend');
+
+    // init spf for saving surname, otherNames
+    var spf = await SPUtils.init();
+    await spf!.setString('surname', surname);
+    await spf.setString('otherNames', otherNames);
 
     try {
       var response = await XHttp.putJson("/profile", dataSend);

@@ -12,6 +12,7 @@ import 'package:flutter_template/page/menu/sponsor.dart';
 import 'package:flutter_template/page/subagent/agent.dart';
 import 'package:flutter_template/page/elect_area/elect-area.dart';
 import 'package:flutter_template/page/results/result.dart';
+import 'package:flutter_template/page/profile.dart';
 
 
 class MenuDrawer extends ConsumerWidget {
@@ -123,8 +124,9 @@ class MenuDrawer extends ConsumerWidget {
                   leading: Icon(Icons.person),
                   title: Text(I18n.of(context)!.profile),
                   onTap: () {
-                    ref.read(appStatusProvider.notifier).change(TAB_PROFILE_INDEX);
-                    Navigator.pop(context);
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ProfileScreen(),
+                    ));
                   },
                   selected: status == TAB_PROFILE_INDEX,
                 ),
@@ -158,19 +160,19 @@ class MenuDrawer extends ConsumerWidget {
                   },
                 ),
                 //退出
-                Divider(height: 1.0, color: Colors.grey),
-                ListTile(
-                  leading: Icon(XUIIcons.logout),
-                  title: Text(I18n.of(context)!.logout),
-                  onTap: () {
-                    ref.read(userProfileProvider.notifier).changeNickName("");
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(
-                          builder: (context) => LoginPage(),
-                        ),
-                        (Route<dynamic> route) => false);
-                  },
-                )
+                // Divider(height: 1.0, color: Colors.grey),
+                // ListTile(
+                //   leading: Icon(XUIIcons.logout),
+                //   title: Text(I18n.of(context)!.logout),
+                //   onTap: () {
+                //     ref.read(userProfileProvider.notifier).changeNickName("");
+                //     Navigator.of(context).pushAndRemoveUntil(
+                //         MaterialPageRoute(
+                //           builder: (context) => LoginPage(),
+                //         ),
+                //         (Route<dynamic> route) => false);
+                //   },
+                // )
               ],
             ),
           ),

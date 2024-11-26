@@ -130,10 +130,16 @@ class I18n implements WidgetsLocalizations {
 	String get addChangeElectArea => "Add/Change electoral area";
 	/// "Add Polling Agent"
 	String get addSubAgents => "Add Polling Agent";
+	/// "cancel"
+	String get cancel => "cancel";
 	/// "Completed"
 	String get completed => "Completed";
+	/// "continue"
+	String get _continue => "continue";
 	/// "created at ${date}"
 	String createdTime(String date) => "created at ${date}";
+	/// "Deactivate"
+	String get deactivate => "Deactivate";
 	/// "email"
 	String get email => "email";
 	/// "must enter email"
@@ -196,6 +202,8 @@ class I18n implements WidgetsLocalizations {
 	String get subAgents => "Sub Agents";
 	/// "Submit"
 	String get submit => "Submit";
+	/// "Are you sure you want to deactivate?"
+	String get sureDeactivate => "Are you sure you want to deactivate?";
 	/// "surname"
 	String get surname => "surname";
 	/// "surname (optional)"

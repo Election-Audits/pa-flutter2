@@ -1,8 +1,11 @@
 // https://www.flutterlibrary.com/screens/sign-up-chat
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_template/core/http/http.dart';
+import 'package:flutter_template/core/utils/toast.dart';
 import 'package:flutter_template/generated/i18n.dart';
 import 'package:flutter_template/utils/sputils.dart';
+import 'package:flutter_template/page/menu/login.dart';
 import 'package:flutter_template/page/menu/login.dart';
 
 
@@ -149,6 +152,7 @@ class _ProfileScreenStatea extends ConsumerState<ProfileScreen> {
                             child: Text(I18n.of(context)!.deactivate,
                                 style: TextStyle(color: Colors.white)),
                             onPressed: () {
+                              onDeactivatePress();
                             },
                           )
                       )
@@ -196,6 +200,94 @@ class _ProfileScreenStatea extends ConsumerState<ProfileScreen> {
       builder: (context) => LoginPage(),
     ),
     (Route<dynamic> route) => false);
+  }
+
+
+  // Deactivate
+  void onDeactivatePress() {
+    // show a prompt to ask the user to confirm
+    showAlertDialog(context);
+  }
+
+  // alert dialog to ask user to confirm deactivate
+  showAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text(I18n.of(context)!.cancel),
+      onPressed:  () {
+        Navigator.of(context).pop(); // dismiss dialog
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text(I18n.of(context)!.continue_),
+      onPressed:  () {
+        // call deactivate function
+        deactivateAccount();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      // title: Text("AlertDialog"),
+      content: Text(I18n.of(context)!.sureDeactivate),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  // deactivate user
+  Future<void> deactivateAccount()async {
+    try {
+      var response = await XHttp.delete("/account/deactivate");
+      int status = response.statusCode;
+      debugPrint('/account/deactivate status: $status');
+      var resBody = response.data;
+
+      switch (status) {
+        case 200:
+          debugPrint('successfully deactivated');
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+            builder: (context) {
+              return LoginPage();
+            }),
+            (_)=> false
+          );
+          break;
+
+        case 400 :
+          debugPrint('otp confirm error: ${resBody?.errMsg}');
+          ToastUtils.error(resBody?.errMsg);
+          break;
+
+        case 401 :
+          debugPrint('401 on deactivate');
+          //ToastUtils.waring("not logged in");
+          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+            builder: (context) {
+              return LoginPage();
+            }),
+            (_)=> false
+          );
+          break;
+
+        default : // 500, etc
+          debugPrint('/account/deactivate error 500 or other');
+          ToastUtils.error(I18n.of(context)!.somethingWentWrong);
+      }
+    } catch (exc) {
+      debugPrint('deactivate exc: $exc');
+      ToastUtils.error(I18n.of(context)!.somethingWentWrong);
+    }
   }
 
 }

@@ -53,7 +53,7 @@
     "addSubAgents": "Add Polling Agent",
     "cancel": "cancel",
     "completed": "Completed",
-    "_continue": "continue",
+    "continue_": "continue",
     "createdTime": "created at {date}",
     "deactivate": "Deactivate",
     "email": "email",

@@ -135,7 +135,7 @@ class I18n implements WidgetsLocalizations {
 	/// "Completed"
 	String get completed => "Completed";
 	/// "continue"
-	String get _continue => "continue";
+	String get continue_ => "continue";
 	/// "created at ${date}"
 	String createdTime(String date) => "created at ${date}";
 	/// "Deactivate"

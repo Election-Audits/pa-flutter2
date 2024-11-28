@@ -89,15 +89,15 @@ class MenuDrawer extends ConsumerWidget {
                   },
                   selected: status == TAB_AGENTS_INDEX,
                 ),
-                ListTile(
-                  leading: Icon(Icons.local_activity),
-                  title: Text(I18n.of(context)!.loginCodes),
-                  onTap: () {
-                    ref.read(appStatusProvider.notifier).change(TAB_LOGIN_CODES_INDEX);
-                    Navigator.pop(context);
-                  },
-                  selected: status == TAB_LOGIN_CODES_INDEX,
-                ),
+                // ListTile(
+                //   leading: Icon(Icons.local_activity),
+                //   title: Text(I18n.of(context)!.loginCodes),
+                //   onTap: () {
+                //     ref.read(appStatusProvider.notifier).change(TAB_LOGIN_CODES_INDEX);
+                //     Navigator.pop(context);
+                //   },
+                //   selected: status == TAB_LOGIN_CODES_INDEX,
+                // ),
                 Divider(height: 1.0, color: Colors.grey),
                 ListTile(
                   leading: Icon(Icons.notifications),
@@ -133,15 +133,6 @@ class MenuDrawer extends ConsumerWidget {
                 //设置、关于、赞助
                 Divider(height: 1.0, color: Colors.grey),
                 ListTile(
-                  leading: Icon(Icons.attach_money),
-                  title: Text(I18n.of(context)!.sponsor),
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => SponsorPage(),
-                    ));
-                  },
-                ),
-                ListTile(
                   leading: Icon(Icons.settings),
                   title: Text(I18n.of(context)!.settings),
                   onTap: () {
@@ -159,20 +150,6 @@ class MenuDrawer extends ConsumerWidget {
                     ));
                   },
                 ),
-                //退出
-                // Divider(height: 1.0, color: Colors.grey),
-                // ListTile(
-                //   leading: Icon(XUIIcons.logout),
-                //   title: Text(I18n.of(context)!.logout),
-                //   onTap: () {
-                //     ref.read(userProfileProvider.notifier).changeNickName("");
-                //     Navigator.of(context).pushAndRemoveUntil(
-                //         MaterialPageRoute(
-                //           builder: (context) => LoginPage(),
-                //         ),
-                //         (Route<dynamic> route) => false);
-                //   },
-                // )
               ],
             ),
           ),

@@ -132,6 +132,18 @@ class I18n implements WidgetsLocalizations {
 	String get addSubAgents => "Add Polling Agent";
 	/// "cancel"
 	String get cancel => "cancel";
+	/// "Select an electoral area"
+	String get checkitem_elect_area => "Select an electoral area";
+	/// "Add polling agents you supervise"
+	String get checkitem_add_subagents => "Add polling agents you supervise";
+	/// "Assist your sub-agents with theil login codes if needed"
+	String get checkitem_assist_subagents => "Assist your sub-agents with theil login codes if needed";
+	/// "After elections, ensure pictures uploaded and results submitted"
+	String get checkitem_upload_results => "After elections, ensure pictures uploaded and results submitted";
+	/// "Checklist"
+	String get checklist => "Checklist";
+	/// "Click '☰' icon at top left to start"
+	String get click_hamburger_icon => "Click '☰' icon at top left to start";
 	/// "Completed"
 	String get completed => "Completed";
 	/// "continue"

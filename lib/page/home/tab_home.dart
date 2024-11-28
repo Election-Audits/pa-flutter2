@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_easyrefresh/easy_refresh.dart';
-import 'package:flutter_template/core/utils/toast.dart';
-import 'package:flutter_template/core/widget/grid/grid_item.dart';
-import 'package:flutter_template/core/widget/list/article_item.dart';
+// import 'package:flutter_easyrefresh/easy_refresh.dart';
+// import 'package:flutter_template/core/utils/toast.dart';
+// import 'package:flutter_template/core/widget/grid/grid_item.dart';
+// import 'package:flutter_template/core/widget/list/article_item.dart';
+import 'package:flutter_template/generated/i18n.dart';
 
 class TabHomePage extends StatefulWidget {
   @override
@@ -10,15 +11,31 @@ class TabHomePage extends StatefulWidget {
 }
 
 class _TabHomePageState extends State<TabHomePage> {
+  final String bullet = "\u2022 ";
+  TextStyle textStyle = TextStyle(fontSize: 16);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Text(
-        "Election Audits",
-        style: TextStyle(fontSize: 17),
-        textAlign: TextAlign.center,
-      ),
+    return Column(
+        children: [
+          const Image(image: AssetImage('assets/images/logo-named.png')),
+          Padding(padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Text(I18n.of(context)!.click_hamburger_icon, style: TextStyle(fontSize: 20))
+          ),
+          //
+          Expanded(child:
+            Padding(padding: EdgeInsets.symmetric(horizontal: 8),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('$bullet ${I18n.of(context)!.checkitem_elect_area}', style: textStyle),
+                  Text('$bullet ${I18n.of(context)!.checkitem_add_subagents}', style: textStyle),
+                  Text('$bullet ${I18n.of(context)!.checkitem_assist_subagents}', style: textStyle),
+                  Text('$bullet ${I18n.of(context)!.checkitem_upload_results}', style: textStyle)
+                ]
+              )
+            )
+          )
+        ],
     );
   }
 

@@ -242,7 +242,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
     }).catchError((onError) {
       // Navigator.of(context).pop();
-      ToastUtils.error(onError);
+      ToastUtils.error('error: $onError');
     });
   }
 }

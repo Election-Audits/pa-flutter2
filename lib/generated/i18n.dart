@@ -130,6 +130,28 @@ class I18n implements WidgetsLocalizations {
 	String get addChangeElectArea => "Add/Change electoral area";
 	/// "Add Polling Agent"
 	String get addSubAgents => "Add Polling Agent";
+	/// "cancel"
+	String get cancel => "cancel";
+	/// "Select an electoral area"
+	String get checkitem_elect_area => "Select an electoral area";
+	/// "Add polling agents you supervise"
+	String get checkitem_add_subagents => "Add polling agents you supervise";
+	/// "Assist your sub-agents with theil login codes if needed"
+	String get checkitem_assist_subagents => "Assist your sub-agents with theil login codes if needed";
+	/// "After elections, ensure pictures uploaded and results submitted"
+	String get checkitem_upload_results => "After elections, ensure pictures uploaded and results submitted";
+	/// "Checklist"
+	String get checklist => "Checklist";
+	/// "Click '☰' icon at top left to start"
+	String get click_hamburger_icon => "Click '☰' icon at top left to start";
+	/// "Completed"
+	String get completed => "Completed";
+	/// "continue"
+	String get continue_ => "continue";
+	/// "created at ${date}"
+	String createdTime(String date) => "created at ${date}";
+	/// "Deactivate"
+	String get deactivate => "Deactivate";
 	/// "email"
 	String get email => "email";
 	/// "must enter email"
@@ -164,6 +186,10 @@ class I18n implements WidgetsLocalizations {
 	String get otpError => "must enter one time passcode";
 	/// "passwords must be equal"
 	String get passwordsNotEqual => "passwords must be equal";
+	/// "Pending"
+	String get pending => "Pending";
+	/// "Pictures"
+	String get pictures => "Pictures";
 	/// "phone"
 	String get phone => "phone";
 	/// "must enter phone number"
@@ -174,8 +200,12 @@ class I18n implements WidgetsLocalizations {
 	String get previouslyAdded => "Previously added";
 	/// "Request successful"
 	String get requestSuccess => "Request successful";
+	/// "Select election"
+	String get selectElection => "Select election";
 	/// "select ${electoralArea}"
 	String selectElectoralArea(String electoralArea) => "select ${electoralArea}";
+	/// "select a polling station and election type"
+	String get selectStationElection => "select a polling station and election type";
 	/// "signed up"
 	String get signedUp => "signed up";
 	/// "Sorry, something went wrong. Try again later"
@@ -184,10 +214,14 @@ class I18n implements WidgetsLocalizations {
 	String get subAgents => "Sub Agents";
 	/// "Submit"
 	String get submit => "Submit";
+	/// "Are you sure you want to deactivate?"
+	String get sureDeactivate => "Are you sure you want to deactivate?";
 	/// "surname"
 	String get surname => "surname";
 	/// "surname (optional)"
 	String get surnameOptional => "surname (optional)";
+	/// "Take pictures of pink sheet"
+	String get takePictures => "Take pictures of pink sheet";
 	/// "Upload Results"
 	String get uploadResults => "Upload Results";
   

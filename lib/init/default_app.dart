@@ -8,6 +8,10 @@ import 'package:flutter_template/router/route_map.dart';
 import 'package:flutter_template/utils/provider.dart';
 import 'package:flutter_template/utils/sputils.dart';
 import '../core/utils/toast.dart';
+import 'package:flutter_template/db/database.dart';
+import 'package:flutter_template/db/entity/result.dart';
+import 'package:flutter_template/db/db-utils.dart';
+
 
 //默认App的启动
 class DefaultApp {
@@ -18,10 +22,18 @@ class DefaultApp {
     initApp();
   }
 
-  /// 必须要优先初始化的内容
+  /// Content to init first
   static Future<void> initFirst() async {
     await SPUtils.init();
     await LocaleUtils.init();
+
+    // db init
+    final mydb = MyDatabase();
+    await mydb.initDb();
+    final resultDao = mydb.db.resultDao;
+    var results = await resultDao.findResults();
+    debugPrint('db results: $results');
+    //debugPrint('db results on init 2: ${results[0]?.electionId}');
   }
 
   /// 程序初始化操作
@@ -37,6 +49,12 @@ final localProvider = StateNotifierProvider<LocaleModel, Locale?>((ref) {
 final appthemeProvider = StateNotifierProvider<AppTheme, dynamic>((ref) {
   return AppTheme(AppThemeClass(getDefaultTheme(), getDefaultBrightness()));
 });
+
+
+// final databaseProvider = StateNotifierProvider<MyDatabase, dynamic>((ref) {
+//   return MyDatabase('app_db.db');
+// });
+
 
 class MyApp extends ConsumerWidget {
   @override

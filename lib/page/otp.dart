@@ -1,4 +1,4 @@
-// Enter OTP while signing up or logging in
+// Enter OTP while signing up or logging in. TODO: ensure on login if data returned, don't go to details page
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +12,7 @@ import 'package:flutter_template/utils/provider.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter_template/page/details-form.dart';
 import 'package:flutter_template/utils/sputils.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
 
 
 
@@ -144,7 +145,16 @@ class _OtpPageState extends ConsumerState<OtpPage> {
     debugPrint('onSubmit otp. isLogin: $isLogin');
     var url = isLogin ? '/login/confirm' : '/signup/confirm';
 
-    var dataSend = {"code": _otpController.text.trim()};
+    String? fbToken = "TODO"; //await FirebaseMessaging.instance.getToken(); // get firebase token
+    // init spf for saving email, phone
+    var spf = await SPUtils.init();
+    await spf!.setString('email', email);
+    await spf.setString('phone', phone);
+
+    var dataSend = {
+      "code": _otpController.text.trim(),
+      "fbToken": fbToken
+    };
     if (email.isNotEmpty) dataSend["email"] = email;
     if (phone.isNotEmpty) dataSend["phone"] = phone;
 

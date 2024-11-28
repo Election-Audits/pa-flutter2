@@ -121,6 +121,15 @@ class XHttp {
     return response;
   }
 
+
+  /// delete
+  static Future delete(String url, [Map<String, dynamic>? data]) async {
+    // set validateStatus option so doesn't throw on status 400 or 500
+    Response response = await dio.delete(url, data: data, options: Options(validateStatus: (_)=>true));
+    return response;
+  }
+
+
   ///下载文件
   static Future downloadFile(urlPath, savePath) async {
     late Response response;

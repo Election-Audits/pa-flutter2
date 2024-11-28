@@ -80,3 +80,5 @@ pubspec.lock
 macos
 windows
 linux
+
+android/app/google-services.json

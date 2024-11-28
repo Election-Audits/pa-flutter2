@@ -75,46 +75,6 @@ class _MainHomePageState extends ConsumerState<MainHomePage> {
                         ToastUtils.success(I18n.of(context)!.agreePrivacy);
                       });
                     }),
-                PopupMenuButton<String>(
-                    itemBuilder: (BuildContext context) =>
-                        <PopupMenuEntry<String>>[
-                          PopupMenuItem<String>(
-                            value: "sponsor",
-                            child: ListTile(
-                              contentPadding:
-                                  EdgeInsets.symmetric(horizontal: 10),
-                              leading: Icon(
-                                Icons.attach_money,
-                              ),
-                              title: Text(I18n.of(context)!.sponsor),
-                            ),
-                          ),
-                          PopupMenuItem<String>(
-                            value: "settings",
-                            child: ListTile(
-                              contentPadding:
-                                  EdgeInsets.symmetric(horizontal: 10),
-                              leading: Icon(
-                                Icons.settings,
-                              ),
-                              title: Text(I18n.of(context)!.settings),
-                            ),
-                          ),
-                          PopupMenuItem<String>(
-                            value: "about",
-                            child: ListTile(
-                              contentPadding:
-                                  EdgeInsets.symmetric(horizontal: 10),
-                              leading: Icon(
-                                Icons.error_outline,
-                              ),
-                              title: Text(I18n.of(context)!.about),
-                            ),
-                          ),
-                        ],
-                    onSelected: (String action) {                      
-                      Navigator.of(context).pushNamed('/menu/$action-page');
-                    })
               ],
             ),
             drawer: MenuDrawer(),
@@ -122,19 +82,6 @@ class _MainHomePageState extends ConsumerState<MainHomePage> {
               index: status,
               children: getTabWidget(context),
             ),
-            // bottomNavigationBar: BottomNavigationBar(
-            //   items: tabs,
-            //   //高亮  被点击高亮
-            //   currentIndex: status,
-            //   //修改 页面
-            //   onTap: (index) {
-            //     // status.tabIndex = index;
-            //     ref.read(appStatusProvider.notifier).change(index);
-                
-            //   },
-            //   type: BottomNavigationBarType.fixed,
-            //   fixedColor: Theme.of(context).primaryColor,
-            // ),
           ),
           //监听导航栏返回,类似onKeyEvent
           onWillPop: () =>

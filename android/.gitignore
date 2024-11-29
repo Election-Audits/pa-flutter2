@@ -11,3 +11,8 @@ GeneratedPluginRegistrant.java
 key.properties
 **/*.keystore
 **/*.jks
+
+# bundles/apks
+app/debug
+app/profile
+app/release

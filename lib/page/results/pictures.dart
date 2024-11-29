@@ -120,6 +120,18 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
               }, 
               icon: const Icon(Icons.photo_camera) 
             )
+          ),
+
+          // Upload pictures button
+          ElevatedButton(
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(context).primaryColor,
+              padding: EdgeInsets.all(15.0)),
+            child: Text(I18n.of(context)!.uploadPictures,
+              style: TextStyle(color: Colors.white)),
+            onPressed: () {
+              _resultController.onUploadPicturesPress();
+            },
           )
         ])
       )
@@ -147,7 +159,9 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
     
     try {
       await spf.setString('stationId', _selectedStation!.id);
+      await spf.setString('stationName', _selectedStation!.name);
       await spf.setString('electionId', _selectedElection!.id);
+      await spf.setString('electionType', _selectedElection!.type);
       await spf.setString('pictureDir', pictureDir!);
     } catch (exc) {
       debugPrint('cameraPress exc: $exc');

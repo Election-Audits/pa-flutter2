@@ -90,27 +90,20 @@ class XHttp {
     return response; // .data;
   }
 
-  ///post 表单请求
-  // static Future post(String url, [Map<String, dynamic>? params]) async {
-  //   Response response = await dio.post(url, queryParameters: params);
-  //   debugPrint(response.data.toString());
-  //   return response; //.data;
-  // }
 
   ///post body请求
   static Future postJson(String url, [Map<String, dynamic>? data]) async {
     // set validateStatus option so doesn't throw on status 400 or 500
     Response response = await dio.post(url, data: data, options: Options(validateStatus: (_)=>true));
-    return response; //.data;
-    // Response? response;
-    // try {
-    //   response = await dio.post(url, data: data);
-    // } catch (exc) {
-    //   return exc;
-    // }
-    // finally {
-    //   return response;
-    // }
+    return response;
+  }
+
+
+  /// post multi-part
+  static Future postFormData(String url, [FormData? data]) async {
+    var headers = {"Content-Type": "multipart/form-data"};
+    Response response = await dio.post(url, data: data, options: Options(validateStatus: (_)=>true, headers: headers));
+    return response;
   }
 
 

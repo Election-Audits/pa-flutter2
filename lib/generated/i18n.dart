@@ -222,6 +222,8 @@ class I18n implements WidgetsLocalizations {
 	String get surnameOptional => "surname (optional)";
 	/// "Take pictures of pink sheet"
 	String get takePictures => "Take pictures of pink sheet";
+	/// "Upload Pictures"
+	String get uploadPictures => "Upload Pictures";
 	/// "Upload Results"
 	String get uploadResults => "Upload Results";
   

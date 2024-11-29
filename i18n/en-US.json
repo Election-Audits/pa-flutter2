@@ -54,7 +54,7 @@
     "cancel": "cancel",
     "checkitem_elect_area": "Select an electoral area",
     "checkitem_add_subagents": "Add polling agents you supervise",
-    "checkitem_assist_subagents": "Assist your sub-agents with theil login codes if needed",
+    "checkitem_assist_subagents": "Assist your sub-agents with their login codes if needed",
     "checkitem_upload_results": "After elections, ensure pictures uploaded and results submitted",
     "checklist": "Checklist",
     "click_hamburger_icon": "Click '☰' icon at top left to start",
@@ -97,5 +97,6 @@
     "surname": "surname",
     "surnameOptional": "surname (optional)",
     "takePictures": "Take pictures of pink sheet",
+    "uploadPictures": "Upload Pictures",
     "uploadResults": "Upload Results"
 }

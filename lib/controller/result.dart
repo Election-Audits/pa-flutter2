@@ -1,5 +1,8 @@
 // Controller for results pages
 
+import 'dart:io';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_template/core/http/http.dart';
@@ -10,13 +13,12 @@ import 'package:flutter_template/db/database.dart';
 import 'package:flutter_template/db/db-utils.dart';
 import 'package:flutter_template/utils/ea-utils.dart';
 import 'package:flutter_template/core/utils/toast.dart';
+import 'package:flutter_template/utils/sputils.dart';
+// import 'package:flutter_template/db/dao/result.dart';
 
 
 class ResultController {
-
-  dynamic database = null;
-  dynamic resultDao;
-
+  final mydb = MyDatabase();
 
   /// Get results (pending or completed) from database
   Future<List<Result>> getResults(String status) async {
@@ -103,6 +105,89 @@ class ResultController {
     }
 
     return electionsRet;
+  }
+
+
+  /// upload pictures to server
+  /// create db record, upload pictures, update db record
+  Future<void> onUploadPicturesPress() async {
+    debugPrint('on upload pictures press...');
+    final resultDao = mydb.db.resultDao;
+    var spf = await SPUtils.init(); // get access to shared prefs
+    var stationId = await spf!.getString('stationId');
+    var stationName = await spf.getString('stationName');
+    var electionId = await spf.getString('electionId');
+    var electionType = await spf.getString('electionType');
+
+    var unixTime = DateTime.now().millisecondsSinceEpoch;
+    final result = Result(unixTime, stationId!, stationName!, electionId!, electionType!, unixTime, 'pending');
+
+    await resultDao.insertResult(result);
+    // TODO: maybe delete previous pending results of this election type for this station
+
+    // var results = await resultDao.findResults();
+    // debugPrint('results: $results');
+
+    // upload pictures
+    // prepare form data
+    var filePaths = await getPictureFiles();
+    //FormData formD = FormData();
+    Map<String,dynamic> map = {
+      "electionId": electionId, "electoralAreaId": stationId,
+      "files": []
+    };
+    for (var filePath in filePaths) {
+      var fileName = filePath.split('/').last;
+      var file = await MultipartFile.fromFile(filePath, filename: fileName);
+      //formD.files.add(file);
+      map['files']!.add(file);
+    }
+    //
+    FormData formD = FormData.fromMap(map);
+    var response = await XHttp.postFormData('/results/pictures', formD);
+    debugPrint('Xhttp response: $response');
+    int status = response.statusCode;
+
+    //return; // TODO: 
+
+    switch(status) {
+      case 200 :
+        // update db, then transition to screen for entering results
+
+        break;
+
+      case 400 :
+
+        break;
+      case 401 :
+
+        break;
+      default  :
+
+    }
+
+  }
+
+
+    // read directory containing pictures
+  Future<List<String>> getPictureFiles() async {
+    var spf = await SPUtils.init();
+    var pictureDir = await spf?.getString('pictureDir');
+    debugPrint('pictureDir: $pictureDir');
+
+    // read directory
+    final dir = Directory(pictureDir!);
+    final List<FileSystemEntity> entities = await dir.list().toList();
+    debugPrint('entities: $entities');
+    List<String> files = [];
+    for (var entity in entities) {
+      files.add(entity.path);
+    }
+    debugPrint('pictures: $files');
+    debugPrint('number of pictures: ${files.length}');
+
+    //
+    return files;
   }
 
 }

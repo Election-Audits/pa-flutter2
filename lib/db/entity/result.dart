@@ -5,7 +5,7 @@ import 'package:floor/floor.dart';
 @entity
 class Result {
   @PrimaryKey(autoGenerate: true)
-  final int? id;
+  final int id;
 
   final String stationId;
   final String stationName;
@@ -14,16 +14,18 @@ class Result {
   final int unixTime; // also used to name the folder containing the pictures
   String status; // pending or completed
   String? serverResultId; // resultId from server database
-  String? summaryId; // reference to Summary table
-  String? resultItemId; // reference to ResultItem table
+  String? summary; // stringified JSON of summary {totalNumVotes, numRegisteredVoters, numRejectedVotes}
+  String? partyResults; // stringified JSON of {[partyId]: <numVotes>,...}
+  String? candidateResults; // stringified JSON of {[candidateId]: <numVotes>,...}
+  String? unknownResults; // stringified JSON of {[name]: <numVotes>...} for when party/independent candidate not known
 
-  Result(this.id, this.stationId, this.stationName, this.electionId, this.electionType, this.unixTime, this.status);
+  Result(this.id, this.stationId, this.stationName, this.electionId, this.electionType, this.unixTime, this.status); // this.id, 
 
   // TODO: indexes: status, unixTime?
 
   @override
   String toString() {
-    return 'Result {id: $id, electoralAreaId: $stationId}, status: $status, electionType ... ';
+    return 'Result {id: $id, electoralAreaId: $stationId, status: $status, electionType ... }';
   }
 }
 

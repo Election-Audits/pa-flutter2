@@ -136,8 +136,8 @@ class I18n implements WidgetsLocalizations {
 	String get checkitem_elect_area => "Select an electoral area";
 	/// "Add polling agents you supervise"
 	String get checkitem_add_subagents => "Add polling agents you supervise";
-	/// "Assist your sub-agents with theil login codes if needed"
-	String get checkitem_assist_subagents => "Assist your sub-agents with theil login codes if needed";
+	/// "Assist your sub-agents with their login codes if needed"
+	String get checkitem_assist_subagents => "Assist your sub-agents with their login codes if needed";
 	/// "After elections, ensure pictures uploaded and results submitted"
 	String get checkitem_upload_results => "After elections, ensure pictures uploaded and results submitted";
 	/// "Checklist"
@@ -214,6 +214,12 @@ class I18n implements WidgetsLocalizations {
 	String get subAgents => "Sub Agents";
 	/// "Submit"
 	String get submit => "Submit";
+	/// "number of registered voters"
+	String get summary_num_registered => "number of registered voters";
+	/// "number of rejected ballots"
+	String get summary_num_rejected => "number of rejected ballots";
+	/// "total number of votes cast"
+	String get summary_num_voted => "total number of votes cast";
 	/// "Are you sure you want to deactivate?"
 	String get sureDeactivate => "Are you sure you want to deactivate?";
 	/// "surname"

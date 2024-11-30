@@ -21,7 +21,7 @@ abstract class ResultDao {
 
   /// update a result's status and serverResultId ()
   @Query('''UPDATE Result SET status = :status, serverResultId = :serverResultId 
-  WHERE stationId = :stationId AND electionId = :electionId''') // TODO: AND status = 'pending'
+  WHERE stationId = :stationId AND electionId = :electionId AND status = pending ''')
   Future<void> updateStatusResultId(String status, String serverResultId, String stationId, String electionId);
 
   /// update a result's summary, partyResults, candidateResults, unknownResults

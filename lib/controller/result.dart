@@ -148,12 +148,13 @@ class ResultController {
     debugPrint('Xhttp response: $response');
     int status = response.statusCode;
 
-    //return; // TODO: 
-
     switch(status) {
       case 200 :
         // update db, then transition to screen for entering results
-
+        var resBody = response.data; // {resultId}
+        await resultDao.updateStatusResultId('completed', resBody.resultId, stationId, electionId);
+        // go to screen for entering results
+        
         break;
 
       case 400 :

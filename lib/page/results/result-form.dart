@@ -12,6 +12,8 @@ import 'package:flutter_template/page/menu/login.dart';
 import 'package:flutter_template/page/results/pictures.dart';
 import 'package:flutter_template/utils/sputils.dart';
 import 'package:flutter_template/utils/ea-utils.dart';
+//import 'package:flutter_template/db/database.dart';
+import 'package:flutter_template/db/db-utils.dart';
 
 
 class ResultFormPage extends ConsumerStatefulWidget {
@@ -32,6 +34,8 @@ class _ResultFormPageState extends ConsumerState<ResultFormPage> {
   Future<String>? queryDone;
   List<Widget> contestantFields = [];
   List<Candidate> _candidates = [];
+
+  final mydb = MyDatabase();
 
   @override
   void initState() {
@@ -111,17 +115,33 @@ class _ResultFormPageState extends ConsumerState<ResultFormPage> {
                 }
 
                 // return loaded data
-                return //Expanded(
-                  //child: 
-                  ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    //itemExtent: 100,
-                    shrinkWrap: true,
-                    itemCount: contestantFields.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return contestantFields[index];
-                    }
-                  );
+                return Column(
+                  children: [
+                    ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      //itemExtent: 100,
+                      shrinkWrap: true,
+                      itemCount: contestantFields.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return contestantFields[index];
+                      }
+                    ),
+
+                    // submit button
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      style: TextButton.styleFrom(
+                        foregroundColor: Theme.of(context).primaryColor,
+                        padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 48.0)
+                      ),
+                      child: Text(I18n.of(context)!.submit,
+                        style: TextStyle(color: Colors.white)),
+                      onPressed: () {
+                        submitResults();
+                      },
+                    )
+                  ]
+                );
                 //);
               }
             )
@@ -213,5 +233,87 @@ class _ResultFormPageState extends ConsumerState<ResultFormPage> {
     return "done";
   }
 
+
+  // submit results
+  Future<void> submitResults() async {
+    closeKeyboard(context);
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return LoadingDialog(
+          showContent: false,
+          backgroundColor: Colors.black38,
+          loadingView: SpinKitCircle(color: Colors.white),
+        );
+      }
+    );
+
+    // build map of results to transmit
+    var dataSend = {
+      "resultId": "", // TODO: pass to screen when loading
+      "summary": {
+        "numRegisteredVoters": _numRegisteredController.text.trim(),
+        "totalNumVotes": _numVotedController.text.trim(),
+        "numRejectedVotes": _numRejectedController.text.trim()
+      },
+      "results": []
+    };
+
+    // iterate through _candidates and _contestantControllers to get values
+    var candResults = [];
+    for (var ind=0; ind< _candidates.length; ind++) {
+      var numVotes = _contestantControllers[ind].text.trim();
+      var candidate = _candidates[ind];
+      var candData = {
+        "candidateId": candidate.id,
+        "numVotes": numVotes
+      };
+
+      candResults.add(candData);
+    }
+
+    dataSend["results"] = candResults;
+
+    // Send the data
+    var response = await XHttp.putJson('/results/summary', dataSend);
+    int status = response.statusCode;
+    var resBody = response.data;
+
+    switch(status) {
+      case 200 :
+        // mark completed in database. Go to results screen
+        final resultDao = mydb.db.resultDao;
+        var spf = await SPUtils.init(); // get access to shared prefs
+        var stationId = await spf!.getString('stationId');
+        var electionId = await spf.getString('electionId');
+        await resultDao.updateStatusResultId('completed', "TODO: resultId", stationId, electionId);
+        // go to results page
+        Navigator.of(context)..pop()..pop();
+        break;
+
+      case 400 :
+        debugPrint('submit results error: ${resBody?.errMsg}');
+        ToastUtils.error(resBody?.errMsg);
+        break;
+
+      case 401 :
+        debugPrint('401 on put /results/summary');
+        //ToastUtils.waring("not logged in");
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+          builder: (context) {
+            return LoginPage();
+          }),
+          (_)=> false
+        );
+        break;
+
+      default :
+        debugPrint('PUT /results/summary error 500 or other');
+        ToastUtils.error(I18n.of(context)!.somethingWentWrong);
+    }
+
+  }
 
 }

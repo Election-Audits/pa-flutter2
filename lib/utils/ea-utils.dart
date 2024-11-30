@@ -32,6 +32,8 @@ class Candidate {
   final String otherNames;
 
   const Candidate(this._id, this.partyId, this.partyInitials, this.partyName, this.surname, this.otherNames);
+
+  String get id => this._id;
 }
 
 

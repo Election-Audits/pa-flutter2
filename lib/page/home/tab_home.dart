@@ -20,11 +20,14 @@ class _TabHomePageState extends State<TabHomePage> {
         children: [
           const Image(image: AssetImage('assets/images/logo-named.png')),
           Padding(padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Text(I18n.of(context)!.click_hamburger_icon, style: TextStyle(fontSize: 20))
+            child: Text(I18n.of(context)!.click_hamburger_icon, style: TextStyle(fontSize: 18))
           ),
           //
+          Padding(padding: const EdgeInsets.only(bottom: 8),
+            child: Text(I18n.of(context)!.checklist, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          ),
           Expanded(child:
-            Padding(padding: EdgeInsets.symmetric(horizontal: 8),
+            Padding(padding: EdgeInsets.symmetric(horizontal: 10),
               child: Column(crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('$bullet ${I18n.of(context)!.checkitem_elect_area}', style: textStyle),

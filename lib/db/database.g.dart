@@ -181,24 +181,14 @@ class _$ResultDao extends ResultDao {
   }
 
   @override
-  Future<void> updateSummaryResults(
-    String summary,
-    String partyResults,
-    String candidateResults,
-    String unknownResults,
+  Future<void> deleteOldPending(
+    int ignoreResultId,
     String stationId,
     String electionId,
   ) async {
     await _queryAdapter.queryNoReturn(
-        'UPDATE Result SET summary = ?1, partyResults = ?2, candidateResults = ?3   unknownResults = ?4 WHERE stationId = ?5 AND electionId = ?6 AND status = \'pending\'',
-        arguments: [
-          summary,
-          partyResults,
-          candidateResults,
-          unknownResults,
-          stationId,
-          electionId
-        ]);
+        'DELETE FROM Result WHERE status = \'pending\' AND id != ?1 AND stationId = ?2    AND electionId = ?3',
+        arguments: [ignoreResultId, stationId, electionId]);
   }
 
   @override

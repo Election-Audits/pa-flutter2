@@ -155,7 +155,8 @@ class ResultController {
     final result = Result(unixTime, stationId!, stationName!, electionId!, electionType!, unixTime, 'pending');
 
     await resultDao.insertResult(result);
-    // TODO: maybe delete previous pending results of this election type for this station
+    // delete previous pending results of this election type for this station
+    await resultDao.deleteOldPending(unixTime, stationId, electionId);
 
     // var results = await resultDao.findResults();
     // debugPrint('results: $results');

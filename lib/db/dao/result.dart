@@ -25,11 +25,18 @@ abstract class ResultDao {
   Future<void> updateStatusResultId(String status, String serverResultId, String stationId, String electionId);
 
   /// update a result's summary, partyResults, candidateResults, unknownResults
-  @Query('''UPDATE Result SET summary = :summary, partyResults = :partyResults, candidateResults = :candidateResults
-  unknownResults = :unknownResults WHERE stationId = :stationId AND electionId = :electionId AND status = 'pending'
-  ''')
-  Future<void> updateSummaryResults(String summary, String partyResults, String candidateResults, String unknownResults,
-  String stationId, String electionId);
+  // @Query('''UPDATE Result SET summary = :summary, partyResults = :partyResults, candidateResults = :candidateResults
+  // unknownResults = :unknownResults WHERE stationId = :stationId AND electionId = :electionId AND status = 'pending'
+  // ''')
+  // Future<void> updateSummaryResults(String summary, String partyResults, String candidateResults, String unknownResults,
+  // String stationId, String electionId);
+
+
+  /// delete old pending results for this station and election when creating a new one. Ignore the newly created one
+  /// 'ignoreResultId'
+  @Query(''' DELETE FROM Result WHERE status = 'pending' AND id != :ignoreResultId AND stationId = :stationId 
+  AND electionId = :electionId ''')
+  Future<void> deleteOldPending(int ignoreResultId, String stationId, String electionId);
 
   /// Delete all (TODO: only for testing)
   // @delete

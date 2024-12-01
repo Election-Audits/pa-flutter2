@@ -12,6 +12,7 @@ import 'package:flutter_template/page/menu/sponsor.dart';
 import 'package:flutter_template/page/subagent/agent.dart';
 import 'package:flutter_template/page/elect_area/elect-area.dart';
 import 'package:flutter_template/page/results/result.dart';
+import 'package:flutter_template/page/results/result-form.dart'; // TODO: remove
 import 'package:flutter_template/page/profile.dart';
 
 
@@ -38,9 +39,10 @@ class MenuDrawer extends ConsumerWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: ClipOval(
                       // 如果已登录，则显示用户头像；若未登录，则显示默认头像
-                      child: FlutterLogo(
-                        size: 80,
-                      ),
+                      child: Image(image: AssetImage('assets/images/logo.png'), height: 80)
+                      // FlutterLogo(
+                      //   size: 80,
+                      // ),
                     ),
                   ),
                   Expanded(
@@ -80,7 +82,7 @@ class MenuDrawer extends ConsumerWidget {
                   selected: status == TAB_HOME_INDEX,
                 ),
                 ListTile(
-                  leading: Icon(Icons.list),
+                  leading: Icon(Icons.group),
                   title: Text(I18n.of(context)!.subAgents),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -90,7 +92,7 @@ class MenuDrawer extends ConsumerWidget {
                   selected: status == TAB_AGENTS_INDEX,
                 ),
                 // ListTile(
-                //   leading: Icon(Icons.local_activity),
+                //   leading: Icon(Icons.pin),
                 //   title: Text(I18n.of(context)!.loginCodes),
                 //   onTap: () {
                 //     ref.read(appStatusProvider.notifier).change(TAB_LOGIN_CODES_INDEX);
@@ -100,7 +102,7 @@ class MenuDrawer extends ConsumerWidget {
                 // ),
                 Divider(height: 1.0, color: Colors.grey),
                 ListTile(
-                  leading: Icon(Icons.notifications),
+                  leading: Icon(Icons.list),
                   title: Text(I18n.of(context)!.myElectAreas),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -110,7 +112,7 @@ class MenuDrawer extends ConsumerWidget {
                   selected: status == TAB_ELECT_AREAS_INDEX,
                 ),
                 ListTile(
-                  leading: Icon(Icons.notifications),
+                  leading: Icon(Icons.upload),
                   title: Text(I18n.of(context)!.uploadResults),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
@@ -131,25 +133,36 @@ class MenuDrawer extends ConsumerWidget {
                   selected: status == TAB_PROFILE_INDEX,
                 ),
                 //设置、关于、赞助
-                Divider(height: 1.0, color: Colors.grey),
-                ListTile(
-                  leading: Icon(Icons.settings),
-                  title: Text(I18n.of(context)!.settings),
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => SettingsPage(),
-                    ));
-                  },
-                ),
-                ListTile(
-                  leading: Icon(Icons.error_outline),
-                  title: Text(I18n.of(context)!.about),
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => AboutPage(),
-                    ));
-                  },
-                ),
+                // Divider(height: 1.0, color: Colors.grey),
+                // ListTile(
+                //   leading: Icon(Icons.settings),
+                //   title: Text(I18n.of(context)!.settings),
+                //   onTap: () {
+                //     Navigator.of(context).push(MaterialPageRoute(
+                //       builder: (context) => SettingsPage(),
+                //     ));
+                //   },
+                // ),
+                // ListTile(
+                //   leading: Icon(Icons.error_outline),
+                //   title: Text(I18n.of(context)!.about),
+                //   onTap: () {
+                //     Navigator.of(context).push(MaterialPageRoute(
+                //       builder: (context) => AboutPage(),
+                //     ));
+                //   },
+                // ),
+
+                // // TODO: comment. For testing screens
+                // ListTile(
+                //   leading: Icon(Icons.preview),
+                //   title: Text('Result form'),
+                //   onTap: () {
+                //     Navigator.of(context).push(MaterialPageRoute(
+                //       builder: (context) => ResultFormPage(serverResultId: '<id>'),
+                //     ));
+                //   },
+                // )
               ],
             ),
           ),

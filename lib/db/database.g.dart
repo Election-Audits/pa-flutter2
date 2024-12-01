@@ -176,7 +176,7 @@ class _$ResultDao extends ResultDao {
     String electionId,
   ) async {
     await _queryAdapter.queryNoReturn(
-        'UPDATE Result SET status = ?1, serverResultId = ?2    WHERE stationId = ?3 AND electionId = ?4 AND status = pending',
+        'UPDATE Result SET status = ?1, serverResultId = ?2    WHERE stationId = ?3 AND electionId = ?4 AND status = \'pending\'',
         arguments: [status, serverResultId, stationId, electionId]);
   }
 

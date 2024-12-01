@@ -5,7 +5,9 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_template/core/http/http.dart';
+import 'package:flutter_template/core/widget/loading_dialog.dart';
 import 'package:flutter_template/generated/i18n.dart';
 import 'package:flutter_template/db/entity/result.dart';
 
@@ -114,6 +116,19 @@ class ResultController {
   /// create db record, upload pictures, update db record
   Future<void> onUploadPicturesPress(BuildContext context) async {
     debugPrint('on upload pictures press...');
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return LoadingDialog(
+          showContent: false,
+          backgroundColor: Colors.black38,
+          loadingView: SpinKitCircle(color: Colors.white),
+        );
+      }
+    );
+
     final resultDao = mydb.db.resultDao;
     var spf = await SPUtils.init(); // get access to shared prefs
     var stationId = await spf!.getString('stationId');
@@ -148,17 +163,19 @@ class ResultController {
     FormData formD = FormData.fromMap(map);
     var response = await XHttp.postFormData('/results/pictures', formD);
     debugPrint('Xhttp response: $response');
+
+    Navigator.of(context).pop(); // remove spinner dialog
     int status = response.statusCode;
     var resBody = response.data; // {resultId}
 
     switch(status) {
       case 200 :
         // update db, then transition to screen for entering results
-        await resultDao.updateStatusResultId('completed', resBody.resultId, stationId, electionId);
+        // await resultDao.updateStatusResultId('completed', resBody.resultId, stationId, electionId);
         // go to screen for entering results
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) {
-            return ResultFormPage();
+            return ResultFormPage(serverResultId: resBody['resultId']);
           }
         ));
         break;

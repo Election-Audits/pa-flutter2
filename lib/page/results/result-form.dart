@@ -17,13 +17,20 @@ import 'package:flutter_template/db/db-utils.dart';
 
 
 class ResultFormPage extends ConsumerStatefulWidget {
+  final String serverResultId; // resultId of picture upload
+
+  ResultFormPage({Key? key, required this.serverResultId}) : super(key: key);
 
   @override
-  _ResultFormPageState createState() => _ResultFormPageState();
+  _ResultFormPageState createState() => _ResultFormPageState(serverResultId);
 }
 
 
 class _ResultFormPageState extends ConsumerState<ResultFormPage> {
+  final String serverResultId;
+
+  _ResultFormPageState(this.serverResultId) : super();
+
   FocusNode blankNode = FocusNode();
   TextEditingController _numRegisteredController = TextEditingController();
   TextEditingController _numVotedController = TextEditingController();
@@ -252,7 +259,7 @@ class _ResultFormPageState extends ConsumerState<ResultFormPage> {
 
     // build map of results to transmit
     var dataSend = {
-      "resultId": "", // TODO: pass to screen when loading
+      "resultId": serverResultId,
       "summary": {
         "numRegisteredVoters": _numRegisteredController.text.trim(),
         "totalNumVotes": _numVotedController.text.trim(),
@@ -288,7 +295,7 @@ class _ResultFormPageState extends ConsumerState<ResultFormPage> {
         var spf = await SPUtils.init(); // get access to shared prefs
         var stationId = await spf!.getString('stationId');
         var electionId = await spf.getString('electionId');
-        await resultDao.updateStatusResultId('completed', "TODO: resultId", stationId, electionId);
+        await resultDao.updateStatusResultId('completed', serverResultId, stationId, electionId);
         // go to results page
         Navigator.of(context)..pop()..pop();
         break;

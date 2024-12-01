@@ -10,6 +10,7 @@ import 'package:flutter_template/core/widget/loading_dialog.dart';
 import 'package:flutter_template/generated/i18n.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_template/page/results/take-picture.dart';
+import 'package:flutter_template/page/results/result-form.dart';
 import 'package:flutter_template/core/utils/path.dart';
 import 'package:flutter_template/utils/ea-utils.dart';
 import 'package:flutter_template/controller/result.dart';
@@ -130,7 +131,7 @@ class _PicturesPageState extends ConsumerState<PicturesPage> {
             child: Text(I18n.of(context)!.uploadPictures,
               style: TextStyle(color: Colors.white)),
             onPressed: () {
-              _resultController.onUploadPicturesPress();
+              _resultController.onUploadPicturesPress(context);
             },
           )
         ])

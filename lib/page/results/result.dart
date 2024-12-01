@@ -59,6 +59,7 @@ class _ResultPageState extends ConsumerState<ResultPage> {
           //Column(
             direction: Axis.vertical,
             crossAxisAlignment: CrossAxisAlignment.center,
+            //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               // show 'add agent' button
               ElevatedButton(
@@ -74,11 +75,13 @@ class _ResultPageState extends ConsumerState<ResultPage> {
                     }
                   ));
                   // call function to query num agents
-                  //getSubAgentsQuery(); //await
+                  getResultsQuery('pending');
+                  getResultsQuery('completed');
                 },
               ),
               // Pending Results to resubmit
-              Text(I18n.of(context)!.pending),
+              SizedBox(height: 10),
+              Text(I18n.of(context)!.pending, style: TextStyle(color: Colors.red, fontSize: 16)),
               Divider(),
               FutureBuilder(
                 future: pendingQueryDone, 
@@ -111,7 +114,7 @@ class _ResultPageState extends ConsumerState<ResultPage> {
               ),
               SizedBox(height: 20,),
               // Completed Results to submit
-              Text(I18n.of(context)!.completed),
+              Text(I18n.of(context)!.completed, style: TextStyle(color: Colors.green, fontSize: 16)),
               Divider(),
               FutureBuilder(
                 future: completedQueryDone, 
@@ -170,10 +173,10 @@ class _ResultPageState extends ConsumerState<ResultPage> {
     });
 
     // assign right widgets
-    //setState(() { // when returning after an upload, will call function
+    setState(() { // when returning after an upload, will call function
       if (status == 'pending') pendingWidgets = widgets;
       else completedWidgets = widgets;
-    //});
+    });
 
     return 'done'; // signal FutureBuilder to update widgets
   }

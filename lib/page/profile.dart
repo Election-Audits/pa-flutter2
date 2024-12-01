@@ -265,8 +265,8 @@ class _ProfileScreenStatea extends ConsumerState<ProfileScreen> {
           break;
 
         case 400 :
-          debugPrint('otp confirm error: ${resBody?.errMsg}');
-          ToastUtils.error(resBody?.errMsg);
+          debugPrint('otp confirm error: ${resBody['errMsg']}');
+          ToastUtils.error(resBody['errMsg']);
           break;
 
         case 401 :

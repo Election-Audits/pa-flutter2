@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_template/page/menu/login.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_template/core/http/http.dart';
@@ -219,8 +220,17 @@ class _AgentFormPageState extends ConsumerState<AgentFormPage> {
 
 
       } else if (status == 400) {
-        debugPrint('POST /subagents error: ${response?.data?.errMsg}');
-        ToastUtils.error(response.data?.errMsg);
+        debugPrint('POST /subagents error: ${response?.data['errMsg']}');
+        ToastUtils.error(response.data['errMsg']);
+
+      } else if (status == 401) {
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+          builder: (context) {
+            return LoginPage();
+          }),
+          (_)=> false
+        );
+
       } else {
         debugPrint('POST /subagents error 500');
         ToastUtils.error(I18n.of(context)!.somethingWentWrong);

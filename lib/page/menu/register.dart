@@ -244,8 +244,8 @@ class _RegisterPageState extends State<RegisterPage> {
           })
         );
       } else if (status == 400) { // display error message that was sent
-        debugPrint('/signup error: ${response?.data?.errMsg}');
-        ToastUtils.error(response?.data?.errMsg);
+        debugPrint('/signup error: ${response?.data['errMsg']}');
+        ToastUtils.error(response?.data['errMsg']);
       } else { // something went wrong
         debugPrint('/signup error 500');
         ToastUtils.error(I18n.of(context)!.somethingWentWrong);

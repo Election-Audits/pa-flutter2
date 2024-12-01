@@ -187,8 +187,8 @@ class _ResultFormPageState extends ConsumerState<ResultFormPage> {
         break;
 
       case 400 :
-        debugPrint('GET /candidates error: ${response?.data?.errMsg}');
-        ToastUtils.error(response.data?.errMsg);
+        debugPrint('GET /candidates error: ${response?.data['errMsg']}');
+        ToastUtils.error(response.data['errMsg']);
         break;
 
       case 401 :
@@ -301,8 +301,8 @@ class _ResultFormPageState extends ConsumerState<ResultFormPage> {
         break;
 
       case 400 :
-        debugPrint('submit results error: ${resBody?.errMsg}');
-        ToastUtils.error(resBody?.errMsg);
+        debugPrint('submit results error: ${resBody['errMsg']}');
+        ToastUtils.error(resBody['errMsg']);
         break;
 
       case 401 :

@@ -8,6 +8,7 @@ import 'package:flutter_template/core/utils/toast.dart';
 import 'package:flutter_template/core/widget/loading_dialog.dart';
 import 'package:flutter_template/generated/i18n.dart';
 import 'package:flutter_template/page/index.dart';
+import 'package:flutter_template/page/menu/login.dart';
 import 'package:flutter_template/utils/provider.dart';
 // import 'package:flutter/foundation.dart';
 import 'package:flutter_template/page/details-form.dart';
@@ -188,8 +189,16 @@ class _AgentPageState extends ConsumerState<AgentPage> {
         });
 
       } else if (status == 400) {
-        debugPrint('GET /subagents error: ${response?.data?.errMsg}');
-        ToastUtils.error(response.data?.errMsg);
+        debugPrint('GET /subagents error: ${response?.data['errMsg']}');
+        ToastUtils.error(response.data['errMsg']);
+      } else if (status == 401) {
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+          builder: (context) {
+            return LoginPage();
+          }),
+          (_)=> false
+        );
+
       } else {
         debugPrint('GET /subagents error 500');
         ToastUtils.error(I18n.of(context)!.somethingWentWrong);

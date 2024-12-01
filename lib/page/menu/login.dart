@@ -233,8 +233,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           })
         );
       } else if (status == 400) { // display error message that was sent
-        debugPrint('/login error: ${response?.data?.errMsg}');
-        ToastUtils.error(response?.data?.errMsg);
+        debugPrint('/login error: ${response?.data['errMsg']}');
+        ToastUtils.error(response?.data['errMsg']);
       } else { // something went wrong
         debugPrint('/login error 500');
         ToastUtils.error(I18n.of(context)!.somethingWentWrong);

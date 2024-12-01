@@ -7,6 +7,7 @@ import 'package:flutter_template/core/http/http.dart';
 import 'package:flutter_template/core/utils/toast.dart';
 import 'package:flutter_template/core/widget/loading_dialog.dart';
 import 'package:flutter_template/generated/i18n.dart';
+import 'package:flutter_template/page/menu/login.dart';
 import 'package:flutter_template/utils/ea-utils.dart';
 
 
@@ -164,8 +165,16 @@ class _ElectAreaFormPageState extends ConsumerState<ElectAreaFormPage> {
         });
 
       } else if (status == 400) {
-        debugPrint('GET "electoral area options" error: ${response?.data?.errMsg}');
-        ToastUtils.error(response.data?.errMsg);
+        debugPrint('GET "electoral area options" error: ${response?.data['errMsg']}');
+        ToastUtils.error(response.data['errMsg']);
+      } else if (status == 401) {
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+          builder: (context) {
+            return LoginPage();
+          }),
+          (_)=> false
+        );
+
       } else {
         debugPrint('GET /subagents error 500');
         ToastUtils.error(I18n.of(context)!.somethingWentWrong);
@@ -218,8 +227,17 @@ class _ElectAreaFormPageState extends ConsumerState<ElectAreaFormPage> {
       if (status == 200) {
         ToastUtils.success(I18n.of(context)!.requestSuccess);
       } else if (status==400) {
-        debugPrint('POST electoral area error: ${response?.data?.errMsg}');
-        ToastUtils.error(response.data?.errMsg);
+        debugPrint('POST electoral area error: ${response?.data['errMsg']}');
+        ToastUtils.error(response.data['errMsg']);
+
+      } else if (status == 401) {
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+          builder: (context) {
+            return LoginPage();
+          }),
+          (_)=> false
+        );
+
       } else {
         debugPrint('POST electoral area error 500');
         ToastUtils.error(I18n.of(context)!.somethingWentWrong);

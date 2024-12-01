@@ -61,8 +61,15 @@ class ResultController {
         //});
 
       } else if (status == 400) {
-        debugPrint('GET /agent/electoral-areas error: ${response?.data?.errMsg}');
-        ToastUtils.error(response.data?.errMsg);
+        debugPrint('GET /agent/electoral-areas error: ${response?.data['errMsg']}');
+        ToastUtils.error(response.data['errMsg']);
+      } else if (status == 401) {
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+          builder: (context) {
+            return LoginPage();
+          }),
+          (_)=> false
+        );
       } else {
         debugPrint('GET /agent/electoral-areas error 500');
         ToastUtils.error(I18n.of(context)!.somethingWentWrong);
@@ -97,8 +104,16 @@ class ResultController {
         //});
 
       } else if (status == 400) {
-        debugPrint('GET /electoral-area/$stationId/parents/elections error: ${response?.data?.errMsg}');
-        ToastUtils.error(response.data?.errMsg);
+        debugPrint('GET /electoral-area/$stationId/parents/elections error: ${response?.data['errMsg']}');
+        ToastUtils.error(response.data['errMsg']);
+      } else if (status == 401) { // unauthorized
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+          builder: (context) {
+            return LoginPage();
+          }),
+          (_)=> false
+        );
+
       } else {
         debugPrint('GET /electoral-area/$stationId/parents/elections error 500');
         ToastUtils.error(I18n.of(context)!.somethingWentWrong);
@@ -181,8 +196,8 @@ class ResultController {
         break;
 
       case 400 :
-        debugPrint('picture upload error: ${resBody?.errMsg}');
-        ToastUtils.error(resBody?.errMsg);
+        debugPrint('picture upload error: ${resBody['errMsg']}');
+        ToastUtils.error(resBody['errMsg']);
         break;
 
       case 401 :

@@ -161,6 +161,7 @@ class _OtpPageState extends ConsumerState<OtpPage> {
     debugPrint('data to send: $dataSend');
     try {
       var response = await XHttp.putJson(url, dataSend);
+      Navigator.of(context).pop(); // remove loading spinner
       int status = response.statusCode;
       debugPrint('/confirm status: $status');
       var resBody = response.data;
@@ -192,8 +193,8 @@ class _OtpPageState extends ConsumerState<OtpPage> {
         }
 
       } else if (status == 400) {
-        debugPrint('otp confirm error: ${resBody?.errMsg}');
-        ToastUtils.error(resBody?.errMsg);
+        debugPrint('otp confirm error: ${resBody['errMsg']}');
+        ToastUtils.error(resBody['errMsg']);
       } else {
         debugPrint('otp confirm error 500');
         ToastUtils.error(I18n.of(context)!.somethingWentWrong);

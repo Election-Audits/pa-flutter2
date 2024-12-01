@@ -10,6 +10,7 @@ import 'package:flutter_template/core/utils/toast.dart';
 import 'package:flutter_template/core/widget/loading_dialog.dart';
 import 'package:flutter_template/generated/i18n.dart';
 import 'package:flutter_template/page/index.dart';
+import 'package:flutter_template/page/menu/login.dart';
 import 'package:flutter_template/page/menu/register.dart';
 import 'package:flutter_template/utils/provider.dart';
 import 'package:flutter_template/utils/sputils.dart';
@@ -181,8 +182,17 @@ class _DetailsFormPageState extends ConsumerState<DetailsFormPage> {
           (_)=> false
         );
       } else if (status == 400) { // display error message
-        debugPrint('otp confirm error: ${resBody?.errMsg}');
-        ToastUtils.error(resBody?.errMsg);
+        debugPrint('otp confirm error: ${resBody['errMsg']}');
+        ToastUtils.error(resBody['errMsg']);
+        
+      } else if (status == 401) {
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+          builder: (context) {
+            return LoginPage();
+          }),
+          (_)=> false
+        );
+        
       } else {
         debugPrint('otp confirm error 500');
         ToastUtils.error(I18n.of(context)!.somethingWentWrong);

@@ -18,7 +18,7 @@ class DefaultApp {
   //运行app
   static void run() {
     WidgetsFlutterBinding.ensureInitialized();
-    initFirst().then((value) => runApp(Store.init(MyApp()))); // ToastUtils.init(
+    initFirst().then((value) => runApp(Store.init(ToastUtils.init(MyApp()))));
     initApp();
   }
 
@@ -33,6 +33,8 @@ class DefaultApp {
     final resultDao = mydb.db.resultDao;
     var results = await resultDao.findResults();
     debugPrint('db results: $results');
+
+    // await resultDao.deleteResults(); // TODO: remove. Only for testing
     //debugPrint('db results on init 2: ${results[0]?.electionId}');
   }
 
@@ -63,6 +65,7 @@ class MyApp extends ConsumerWidget {
     final local = ref.watch(localProvider);
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Project',
       theme: ThemeData(
         brightness: appTheme.brightness,

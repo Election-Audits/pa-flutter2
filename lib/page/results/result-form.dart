@@ -307,13 +307,8 @@ class _ResultFormPageState extends ConsumerState<ResultFormPage> {
 
       case 401 :
         debugPrint('401 on put /results/summary');
-        //ToastUtils.waring("not logged in");
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-          builder: (context) {
-            return LoginPage();
-          }),
-          (_)=> false
-        );
+        // Don't redirect to login, could be non-polling station agent making call
+        ToastUtils.error(I18n.of(context)!.unauthorized);
         break;
 
       default :

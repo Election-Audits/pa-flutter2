@@ -191,15 +191,13 @@ class _AgentPageState extends ConsumerState<AgentPage> {
       } else if (status == 400) {
         debugPrint('GET /subagents error: ${response?.data['errMsg']}');
         ToastUtils.error(response.data['errMsg']);
-      } else if (status == 401) {
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-          builder: (context) {
-            return LoginPage();
-          }),
-          (_)=> false
-        );
-
-      } else {
+      }
+      // NB: could be 401 bc it's a subagent calling supervisor function. Don't redirect to login
+      else if (status == 401) {
+        debugPrint('unauthorized to get subagents');
+        ToastUtils.error(I18n.of(context)!.unauthorized);
+      }
+      else {
         debugPrint('GET /subagents error 500');
         ToastUtils.error(I18n.of(context)!.somethingWentWrong);
       }

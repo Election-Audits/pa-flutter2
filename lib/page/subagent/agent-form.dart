@@ -224,12 +224,8 @@ class _AgentFormPageState extends ConsumerState<AgentFormPage> {
         ToastUtils.error(response.data['errMsg']);
 
       } else if (status == 401) {
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-          builder: (context) {
-            return LoginPage();
-          }),
-          (_)=> false
-        );
+        // NB: it's a 401 bc it's a subagent calling supervisor function. Don't redirect to login
+        ToastUtils.error(I18n.of(context)!.unauthorized);
 
       } else {
         debugPrint('POST /subagents error 500');

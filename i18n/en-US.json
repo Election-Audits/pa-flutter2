@@ -52,8 +52,8 @@
     "addChangeElectArea": "Add/Change electoral area",
     "addSubAgents": "Add Polling Agent",
     "cancel": "cancel",
-    "checkitem_elect_area": "Select an electoral area",
-    "checkitem_add_subagents": "Add polling agents you supervise",
+    "checkitem_elect_area": "Select electoral areas (e.g. constituency or polling stations)",
+    "checkitem_add_subagents": "Add polling agents you supervise, if any",
     "checkitem_assist_subagents": "Assist your sub-agents with their login codes if needed",
     "checkitem_upload_results": "After elections, ensure pictures uploaded and results submitted",
     "checklist": "Checklist",
@@ -100,6 +100,7 @@
     "surname": "surname",
     "surnameOptional": "surname (optional)",
     "takePictures": "Take pictures of pink sheet",
+    "unauthorized": "Unauthorized to perform this action",
     "uploadPictures": "Upload Pictures",
     "uploadResults": "Upload Results"
 }

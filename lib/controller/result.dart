@@ -202,12 +202,13 @@ class ResultController {
         break;
 
       case 401 :
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-          builder: (context) {
-            return LoginPage();
-          }),
-          (_)=> false
-        );
+        ToastUtils.error(I18n.of(context)!.unauthorized);
+        // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+        //   builder: (context) {
+        //     return LoginPage();
+        //   }),
+        //   (_)=> false
+        // );
         break;
         
       default  :

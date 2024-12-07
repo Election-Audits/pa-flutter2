@@ -132,10 +132,10 @@ class I18n implements WidgetsLocalizations {
 	String get addSubAgents => "Add Polling Agent";
 	/// "cancel"
 	String get cancel => "cancel";
-	/// "Select an electoral area"
-	String get checkitem_elect_area => "Select an electoral area";
-	/// "Add polling agents you supervise"
-	String get checkitem_add_subagents => "Add polling agents you supervise";
+	/// "Select electoral areas (e.g. constituency or polling stations)"
+	String get checkitem_elect_area => "Select electoral areas (e.g. constituency or polling stations)";
+	/// "Add polling agents you supervise, if any"
+	String get checkitem_add_subagents => "Add polling agents you supervise, if any";
 	/// "Assist your sub-agents with their login codes if needed"
 	String get checkitem_assist_subagents => "Assist your sub-agents with their login codes if needed";
 	/// "After elections, ensure pictures uploaded and results submitted"
@@ -228,6 +228,8 @@ class I18n implements WidgetsLocalizations {
 	String get surnameOptional => "surname (optional)";
 	/// "Take pictures of pink sheet"
 	String get takePictures => "Take pictures of pink sheet";
+	/// "Unauthorized to perform this action"
+	String get unauthorized => "Unauthorized to perform this action";
 	/// "Upload Pictures"
 	String get uploadPictures => "Upload Pictures";
 	/// "Upload Results"
